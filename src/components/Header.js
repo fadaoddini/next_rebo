@@ -4,20 +4,20 @@ export default function Header() {
   return (
     <header className="text-center bg-gray-800 text-white p-4">
       <nav className="flex space-x-4">
-        <Link href="/">
-          <a className="hover:text-gray-400">خانه</a>
+        <Link className="hover:text-gray-400" href="/">
+          خانه
         </Link>
-        <Link href="/profile">
-          <a className="hover:text-gray-400">پروفایل</a>
+        <Link className="hover:text-gray-400" href="/profile">
+         پروفایل
         </Link>
-        <Link href="/bazar">
-          <a className="hover:text-gray-400">بازار</a>
+        <Link className="hover:text-gray-400" href="/bazar">
+          بازار
         </Link>
-        <Link href="/product">
-          <a className="hover:text-gray-400">محصول</a>
+        <Link className="hover:text-gray-400" href="/product">
+          محصول
         </Link>
-        <Link href="/category">
-          <a className="hover:text-gray-400">دسته بندی </a>
+        <Link className="hover:text-gray-400" href="/category">
+          دسته بندی 
         </Link>
       </nav>
     </header>
