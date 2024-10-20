@@ -1,8 +1,12 @@
+import styles from './profile.module.css'; // ایمپورت CSS Modules مخصوص صفحه پروفایل
 
 export default function Profile() {
   return (
     <div>
-      <h1 className="text-center py-10">پروفایل</h1>
+      <h1 className={styles.profileHeader}>پروفایل کاربری</h1>
+      <div className={styles.profileContent}>
+        <p>محتوای پروفایل...</p>
+      </div>
     </div>
   );
 }

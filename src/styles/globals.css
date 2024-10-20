@@ -13,9 +13,21 @@
 
 
 
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+
+  --coper: #c0937b;
+  --brown: #4b2e1e;
+  --dark-red: #8b3a3a;
+  --white: #ffffff;
+  --black: #000000;
+  --dark-background: #0a0a0a;
+  --light-red: #fde5db;
+  --dark-green: #556b2f;
+  --light-green: #e3f1c8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,6 +40,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  margin-top: 50px;
   font-family: 'IranSans', sans-serif;
 }
 

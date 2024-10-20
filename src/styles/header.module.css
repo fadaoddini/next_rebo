@@ -1,0 +1,133 @@
+/* استایل‌های عمومی */
+.header {
+
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    padding: 5px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    
+    direction: rtl;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar_wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar_container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  
+  .logo {
+    width: 40px;
+    height: auto;
+  }
+  
+  .nav_list {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+    justify-content: center;
+  }
+  
+  .nav_item {
+    margin-right: 20px;
+    position: relative;
+  }
+  
+  .nav_item a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    font-size: 0.8rem;
+    line-height: 20px;
+    transition: color 0.3s;
+  }
+  
+  .nav_item a.active {
+    color: #FFA412;
+  }
+  
+  .nav_item a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 1px;
+    background: orange;
+    transition: width 0.4s;
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+  }
+  
+  .nav_item a:hover::after,
+  .nav_item a.active::after {
+    width: 100%;
+  }
+  
+  .left_menu {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon {
+    display: flex;
+    align-items: center;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    margin: auto 2px;
+    transition: background-image 0.3s ease-in-out;
+    background-size: cover;
+  }
+  
+  .tooltip_container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tooltip {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    font-size: 10px;
+    z-index: 1000;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    white-space: nowrap;
+  }
+  
+  .tooltip_container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .tooltip_container:hover .icon {
+    filter: brightness(99%);
+  }
+  
