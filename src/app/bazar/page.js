@@ -4,7 +4,7 @@ export default function Bazar() {
   return (
     <div>
       <Header />
-      <h1>Welcome to the Bazar Page</h1>
+      <h1 className="text-center py-10">Welcome to the Bazar Page</h1>
     </div>
   );
 }
