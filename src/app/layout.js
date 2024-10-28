@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import Header from '@/components/Header';
 import { AuthProvider } from '@/context/AuthContext'; // وارد کردن AuthProvider
+import { Suspense } from 'react';
 
 export const metadata = {
   title: "سامانه بورس خرما | ربو",
@@ -15,9 +16,12 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           {/* هدر که در تمام صفحات نمایش داده می‌شود */}
           <Header />  
-          
-          {/* محتوای صفحات مختلف که در children قرار می‌گیرد */}
-          <main>{children}</main>
+
+          {/* استفاده از Suspense برای بارگذاری معلق */}
+          <Suspense fallback={<div>در حال بارگذاری...</div>}>
+            {/* محتوای صفحات مختلف که در children قرار می‌گیرد */}
+            <main>{children}</main>
+          </Suspense>
         </AuthProvider>
       </body>
     </html>
