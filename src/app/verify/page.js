@@ -1,27 +1,28 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation"; // Import useSearchParams
 import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import styles from "@/styles/styleVerify.module.css";
 import Config from "@/config/config";
-import Cookies from "js-cookie";
 import Image from "next/image";
-
-const useMobile = () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  return searchParams.get("mobile");
-};
 
 const Verify = () => {
   const { authStatus, setAuthStatus } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams(); // Get search parameters
 
-  const mobile = useMobile();  // استفاده از موبایل
+  const [mobile, setMobile] = useState(null);
   const [code, setCode] = useState(["", "", "", ""]);
   const [toast, setToast] = useState({ message: "", type: "" });
   const [timeLeft, setTimeLeft] = useState(120);
+
+  useEffect(() => {
+    // Get mobile number from search parameters
+    const mobileParam = searchParams.get("mobile");
+    setMobile(mobileParam);
+  }, [searchParams]);
 
   useEffect(() => {
     if (authStatus) {
