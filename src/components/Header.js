@@ -1,121 +1,197 @@
 "use client"; // اضافه کردن این خط
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; 
+import { useAuth } from "@/context/AuthContext"; 
 import Link from "next/link";
 import Image from "next/image";
 import styles from "@/styles/header.module.css";
+import ConfirmDialog from "./utils/ConfirmDialog";
 
 export default function Header() {
-  const [iconSrc, setIconSrc] = useState({
-    question: "/images/question.png",
-    exit: "/images/exit.png",
-    profile: "/images/profile.png",
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { authStatus, logout } = useAuth(); // وضعیت احراز هویت و تابع logout
+  const router = useRouter(); // استفاده برای هدایت
 
+  const [iconSrc, setIconSrc] = useState({
+    question: "/images/question.svg",
+    exit: "/images/exit.svg",
+    profile: "/images/profile.svg",
+    login: "/images/login.svg",
+    home: "/images/home.svg",
+    bazar: "/images/bazar.svg",
+    create: "/images/create.svg",
+    category: "/images/category.svg",
+    law: "/images/law.svg",
   });
 
   const handleMouseEnter = (icon) => {
     setIconSrc((prevState) => ({
       ...prevState,
-      [icon]: `/images/${icon}_hover.png`,
+      [icon]: `/images/${icon}_hover.svg`,
     }));
   };
 
   const handleMouseLeave = (icon) => {
     setIconSrc((prevState) => ({
       ...prevState,
-      [icon]: `/images/${icon}.png`,
+      [icon]: `/images/${icon}.svg`,
     }));
   };
 
+  const handleLogoutClick = () => {
+    setIsDialogOpen(true); // باز کردن دیالوگ تایید خروج
+  };
+
+  const handleConfirmLogout = async () => {
+    try {
+      await logout(); // فراخوانی تابع logout از کانتکست
+      router.push("/"); // هدایت به صفحه اصلی پس از خروج
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert("خطا در خروج. لطفاً دوباره امتحان کنید."); // نمایش پیام خطا در صورت وجود مشکل
+    } finally {
+      setIsDialogOpen(false); // بستن دیالوگ در هر صورت
+    }
+  };
+
+  const handleCancelLogout = () => {
+    setIsDialogOpen(false); // بستن دیالوگ بدون خروج
+  };
+
   return (
-    <header className={styles.header}>
-      <div className={styles.navbar_wrapper}>
-        <nav className={styles.navbar_container}>
-          <Image
-            src="/images/logo.png"
-            alt="ربو | بورس خرما"
-            className={styles.logo}
-            width={70}
-            height={70}
-          />
+    <>
+      <header className={styles.header}>
+        <div className={styles.navbar_wrapper}>
+          <nav className={styles.navbar_container}>
+            <Image
+              src="/images/logo.svg"
+              alt="ربو | بورس خرما"
+              className={styles.logo}
+              width={70}
+              height={70}
+            />
 
-          <ul className={styles.nav_list}>
-            <li className={styles.nav_item}>
-              <Link href="/" className={styles.nav_link}>
-                خانه
-              </Link>
-            </li>
-            <li className={styles.nav_item}>
-              <Link href="/bazar" className={styles.nav_link}>
-                بازار عمده
-              </Link>
-            </li>
-            <li className={styles.nav_item}>
-              <Link href="/profile" className={styles.nav_link}>
-                پروفایل
-              </Link>
-            </li>
-            <li className={styles.nav_item}>
-              <Link href="/product" className={styles.nav_link}>
-                محصول
-              </Link>
-            </li>
-            <li className={styles.nav_item}>
-              <Link href="/category" className={styles.nav_link}>
-                دسته بندی
-              </Link>
-            </li>
-            <li className={styles.nav_item}>
-              <Link href="/law" className={styles.nav_link}>
-                قوانین
-              </Link>
-            </li>
-          </ul>
+            <div className={styles.left_menu}>
+              <div
+                className={styles.tooltip_container}
+                onMouseEnter={() => handleMouseEnter("home")}
+                onMouseLeave={() => handleMouseLeave("home")}
+              >
+                <Link href="/">
+                  <Image
+                    src={iconSrc.home}
+                    alt=" خانه"
+                    className={`${styles.icon} ${styles.icon_question}`}
+                    width={24}
+                    height={24}
+                  />
+                  <span className={styles.nav_title}>خانه</span>
+                </Link>
+              </div>
 
-          <div className={styles.left_menu}>
-            <div className={styles.tooltip_container}>
-              <Link href="/faq">
-                <Image
-                  src={iconSrc.question}
-                  alt="سوالات متداول"
-                  className={`${styles.icon} ${styles.icon_question}`}
-                  width={34}
-                  height={34}
-                  onMouseEnter={() => handleMouseEnter("question")}
-                  onMouseLeave={() => handleMouseLeave("question")}
-                />
-                <div className={styles.tooltip}>سوالات متداول</div>
-              </Link>
+              <div
+                className={styles.tooltip_container}
+                onMouseEnter={() => handleMouseEnter("category")}
+                onMouseLeave={() => handleMouseLeave("category")}
+              >
+                <Link href="/bazar">
+                  <Image
+                    src={iconSrc.category}
+                    alt=" بازار "
+                    className={`${styles.icon} ${styles.icon_question}`}
+                    width={34}
+                    height={34}
+                  />
+                  <span className={styles.nav_title}>بازار</span>
+                </Link>
+              </div>
+
+              <div
+                className={styles.tooltip_container}
+                onMouseEnter={() => handleMouseEnter("create")}
+                onMouseLeave={() => handleMouseLeave("create")}
+              >
+                <Link href="/create">
+                  <Image
+                    src={iconSrc.create}
+                    alt="ایجاد "
+                    className={`${styles.icon} ${styles.icon_question}`}
+                    width={34}
+                    height={34}
+                  />
+                  <span className={styles.nav_title}>ایجاد</span>
+                </Link>
+              </div>
+
+              <div
+                className={styles.tooltip_container}
+                onMouseEnter={() => handleMouseEnter("profile")}
+                onMouseLeave={() => handleMouseLeave("profile")}
+              >
+                <Link href="/profile">
+                  <Image
+                    src={iconSrc.profile}
+                    alt="پروفایل"
+                    className={`${styles.icon} ${styles.icon_profile}`}
+                    width={34}
+                    height={34}
+                  />
+                  <span className={styles.nav_title}>پروفایل</span>
+                </Link>
+              </div>
+
+              {/* دکمه خروج */}
+              {authStatus && (
+                <div
+                  className={styles.tooltip_container}
+                  onMouseEnter={() => handleMouseEnter("exit")}
+                  onMouseLeave={() => handleMouseLeave("exit")}
+                  onClick={handleLogoutClick} // فراخوانی دیالوگ خروج
+                >
+                  <Image
+                    src={iconSrc.exit}
+                    alt="خروج"
+                    className={`${styles.icon} ${styles.icon_exit}`}
+                    width={34}
+                    height={34}
+                  />
+                  <span className={styles.nav_title}>خروج</span>
+                </div>
+              )}
+
+              {!authStatus && (
+                <div
+                  className={styles.tooltip_container}
+                  onMouseEnter={() => handleMouseEnter("login")}
+                  onMouseLeave={() => handleMouseLeave("login")}
+                >
+                  <Link href="/login">
+                    <Image
+                      src={iconSrc.login}
+                      alt=" ورود"
+                      className={`${styles.icon} ${styles.icon_question}`}
+                      width={24}
+                      height={24}
+                    />
+                    <span className={styles.nav_title}>ورود</span>
+                  </Link>
+                </div>
+              )}
             </div>
-            <div className={styles.tooltip_container}>
-              <Link href="/profile">
-                <Image
-                  src={iconSrc.profile}
-                  alt="پروفایل"
-                  className={`${styles.icon} ${styles.icon_profile}`}
-                  width={34}
-                  height={34}
-                  onMouseEnter={() => handleMouseEnter("profile")}
-                  onMouseLeave={() => handleMouseLeave("profile")}
-                />
-                <div className={styles.tooltip}>پروفایل</div>
-              </Link>
-            </div>
-            <div className={styles.tooltip_container}>
-              <Image
-                src={iconSrc.exit}
-                alt="خروج"
-                className={`${styles.icon} ${styles.icon_exit}`}
-                width={34}
-                height={34}
-                onMouseEnter={() => handleMouseEnter("exit")}
-                onMouseLeave={() => handleMouseLeave("exit")}
-              />
-              <div className={styles.tooltip}>خروج</div>
-            </div>
-          </div>
-        </nav>
-      </div>
-    </header>
+          </nav>
+        </div>
+      </header>
+
+      {/* نمایش دیالوگ تایید خروج */}
+      {isDialogOpen && (
+        <ConfirmDialog
+          message="آیا مطمئن هستید که می‌خواهید خارج شوید؟"
+          onConfirm={handleConfirmLogout}
+          onCancel={handleCancelLogout}
+          isOpen={isDialogOpen}
+        />
+      )}
+    </>
   );
 }

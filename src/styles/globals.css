@@ -5,8 +5,7 @@
 
 @font-face {
   font-family: 'IranSans';
-  src: url('/fonts/IRANSansXFaNum-DemiBold.woff2') format('woff2'),
-       url('/fonts/IRANSansXFaNum-DemiBold.woff') format('woff');
+  src: url('../public/fonts/iransansbold.ttf');
   font-weight: 400;
   font-style: normal;
 }
@@ -15,12 +14,13 @@
 
 
 :root {
-  --background: #ffffff;
+  --background: #FCF8F1;
   --foreground: #171717;
 
 
   --coper: #c0937b;
   --brown: #4b2e1e;
+  --cream: #705242;
   --dark-red: #8b3a3a;
   --white: #ffffff;
   --black: #000000;
@@ -28,6 +28,20 @@
   --light-red: #fde5db;
   --dark-green: #556b2f;
   --light-green: #e3f1c8;
+
+  --btn:#408d63;
+  --btn-hover:#118878;
+
+  --buy-dark: #556b2f; 
+  --buy-dark1: #6e8548; 
+  --buy-light: #e3f1c8; 
+  --sell-dark: #8b3a3a; 
+  --sell-dark1: #9c4949; 
+  --sell-light: #fde5db; 
+  --bg_chart:#F6E8DD;
+
+
+  --card-shadow:var(--foreground);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -40,8 +54,8 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  margin-top: 50px;
-  font-family: 'IranSans', sans-serif;
+  margin-top: 75px;
+  font-family: 'IranSans';
 }
 
 @layer utilities {
