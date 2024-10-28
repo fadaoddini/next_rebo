@@ -9,9 +9,14 @@ import { useSearchParams } from "next/navigation";
 import useCheckToken from "@/hook/useCheckToken";
 
 export default function Category() {
+
+
   const searchParams = useSearchParams();
-  const color = searchParams.get("color");
-  console.log("color", color);
+  const [color, setColor] = useState(null);
+  useEffect(() => {
+    setColor(searchParams.get("color"));
+  }, [searchParams]);
+
   const textColor = color === "buy" ? "var(--dark-green)" : "var(--dark-red)";
   const leftBargImage =
     color === "buy"
@@ -28,11 +33,10 @@ export default function Category() {
   const titleClass =
     color === "buy" ? `${styles.titleGreen} ` : `${styles.titleRed} `;
 
-  // مدیریت داده‌های پویا
+  
   const [categories, setCategories] = useState([]);
-  const isLoggedIn = useCheckToken(); // استفاده از hook برای بررسی لاگین بودن
-
-  // بارگذاری داده‌ها از API
+  const isLoggedIn = useCheckToken(); 
+  
   useEffect(() => {
     const fetchData = async () => {
       if (isLoggedIn) {
@@ -44,7 +48,7 @@ export default function Category() {
             }
           );
 
-          // ذخیره داده‌ها در state
+          
           setCategories(response.data);
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -53,7 +57,7 @@ export default function Category() {
     };
 
     fetchData();
-  }, [isLoggedIn]); // اجرا فقط زمانی که isLoggedIn تغییر کند (توکن نوسازی شود)
+  }, [isLoggedIn]); 
 
   return (
     <Suspense fallback={<div>در حال بارگذاری...</div>}>

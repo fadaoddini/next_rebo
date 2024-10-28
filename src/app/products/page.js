@@ -8,8 +8,16 @@ import ProductCard from "@/components/bazar/items/ProductCard";
 import styles from "@/styles/products.module.css";
 
 export default function Products() {
+
+
   const searchParams = useSearchParams();
-  const color = searchParams.get("color");
+
+  const [color, setColor] = useState(null);
+  useEffect(() => {
+    setColor(searchParams.get("color"));
+  }, [searchParams]);
+
+
   const typeId = searchParams.get("type_id");
   const cardClassName = color === "buy" ? styles.buyCard : styles.sellCard;
   const [products, setProducts] = useState([]);

@@ -12,8 +12,20 @@ import Image from "next/image";
 const Verify = () => {
   const { authStatus, setAuthStatus } = useAuth();
   const router = useRouter();
+
+
+
+
   const searchParams = useSearchParams();
-  const mobile = searchParams.get("mobile");
+
+
+  const [mobile, setMobile] = useState(null);
+  useEffect(() => {
+    setMobile(searchParams.get("mobile"));
+  }, [searchParams]);
+
+
+
   const [code, setCode] = useState(["", "", "", ""]);
   const [toast, setToast] = useState({ message: "", type: "" });
   const [timeLeft, setTimeLeft] = useState(120);
