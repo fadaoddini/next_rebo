@@ -1,6 +1,6 @@
-"use client"; 
+"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
@@ -10,36 +10,35 @@ import Cookies from "js-cookie";
 import Image from "next/image";
 
 const Verify = () => {
-  const { authStatus, setAuthStatus } = useAuth(); // وضعیت احراز هویت
+  const { authStatus, setAuthStatus } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const mobile = searchParams.get("mobile"); // دریافت شماره موبایل از query
+  const mobile = searchParams.get("mobile");
   const [code, setCode] = useState(["", "", "", ""]);
   const [toast, setToast] = useState({ message: "", type: "" });
-  const [timeLeft, setTimeLeft] = useState(120); // 2 دقیقه معادل 120 ثانیه
+  const [timeLeft, setTimeLeft] = useState(120);
 
   useEffect(() => {
-    console.log("authStatus in Verify:", authStatus); // بررسی وضعیت
+    console.log("authStatus in Verify:", authStatus);
     if (authStatus) {
       router.push("/");
     }
   }, [authStatus, router]);
 
-  // تنظیم تایمر
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 0) {
           clearInterval(timer);
           setToast({ message: "زمان شما به پایان رسید.", type: "error" });
-          router.push("/login"); // هدایت به صفحه ورود بعد از پایان زمان
+          router.push("/login");
           return 0;
         }
         return prevTime - 1;
       });
     }, 1000);
 
-    return () => clearInterval(timer); // پاک کردن تایمر در هنگام Unmount
+    return () => clearInterval(timer);
   }, []);
 
   const handleChange = (e, index) => {
@@ -50,7 +49,6 @@ const Verify = () => {
       newCode[index] = value;
       setCode(newCode);
 
-      // فوکوس به خانه بعدی
       if (index < 3) {
         document.getElementById(`code-input-${index + 1}`).focus();
       }
@@ -90,7 +88,7 @@ const Verify = () => {
 
       if (response.status === 200) {
         console.log("پاسخ دریافتی:", response.data);
-        setAuthStatus(true); // تغییر وضعیت احراز هویت
+        setAuthStatus(true);
       } else {
         setToast({
           message: response.data.message || "کد تأیید نادرست است.",
@@ -107,50 +105,53 @@ const Verify = () => {
   };
 
   return (
-    <div className={styles.verify_wrapper}>
-      <div className={styles.verify_container}>
-        <Image
-          src="/images/logo.png"
-          alt="rebo"
-          className={styles.logo}
-          width={100}
-          height={100}
-        />
-        <p className={styles.enter_text}>شماره ارسال شده به موبایل خود را وارد نمائید</p>
+    <Suspense fallback={<div>در حال بارگیری...</div>}>
+      <div className={styles.verify_wrapper}>
+        <div className={styles.verify_container}>
+          <Image
+            src="/images/logo.png"
+            alt="rebo"
+            className={styles.logo}
+            width={100}
+            height={100}
+          />
+          <p className={styles.enter_text}>
+            شماره ارسال شده به موبایل خود را وارد نمائید
+          </p>
 
-        <form onSubmit={handleSubmit}>
-          <div className={styles.code_container}>
-            {code.map((digit, index) => (
-              <input
-                key={index}
-                id={`code-input-${index}`}
-                type="text"
-                value={digit}
-                onChange={(e) => handleChange(e, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                maxLength="1"
-                className={styles.code_input}
-              />
-            ))}
+          <form onSubmit={handleSubmit}>
+            <div className={styles.code_container}>
+              {code.map((digit, index) => (
+                <input
+                  key={index}
+                  id={`code-input-${index}`}
+                  type="text"
+                  value={digit}
+                  onChange={(e) => handleChange(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  maxLength="1"
+                  className={styles.code_input}
+                />
+              ))}
+            </div>
+            <button type="submit">تأیید</button>
+          </form>
+          <div className={styles.timer}>
+            زمان باقی‌مانده: {Math.floor(timeLeft / 60)}:
+            {(timeLeft % 60).toString().padStart(2, "0")}
           </div>
-          <button type="submit">تأیید</button>
-        </form>
-        <div className={styles.timer}>
-          {`زمان باقی‌مانده: ${Math.floor(timeLeft / 60)}:${(timeLeft % 60)
-            .toString()
-            .padStart(2, "0")}`}
+          {toast.message && (
+            <div
+              className={`${styles.toast} ${
+                toast.type === "error" ? styles.error : styles.success
+              }`}
+            >
+              {toast.message}
+            </div>
+          )}
         </div>
-        {toast.message && (
-          <div
-            className={`${styles.toast} ${
-              toast.type === "error" ? styles.error : styles.success
-            }`}
-          >
-            {toast.message}
-          </div>
-        )}
       </div>
-    </div>
+    </Suspense>
   );
 };
 

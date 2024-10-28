@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import axios from "axios";
 import Config from "@/config/config";
 import Link from "next/link";
@@ -56,37 +56,43 @@ export default function Category() {
   }, [isLoggedIn]); // اجرا فقط زمانی که isLoggedIn تغییر کند (توکن نوسازی شود)
 
   return (
-    <div className={styles.categoryContainer}>
-      {categories.map((category) => (
-        <div key={category.cat_id}>
-          <h1 className={titleClass}>
-            <img src={leftBargImage} alt="Left" className={styles.sideImage} />
-            {category.category}
-            <img
-              src={rightBargImage}
-              alt="Right"
-              className={styles.sideImage}
-            />
-          </h1>
+    <Suspense fallback={<div>در حال بارگذاری...</div>}>
+      <div className={styles.categoryContainer}>
+        {categories.map((category) => (
+          <div key={category.cat_id}>
+            <h1 className={titleClass}>
+              <img
+                src={leftBargImage}
+                alt="Left"
+                className={styles.sideImage}
+              />
+              {category.category}
+              <img
+                src={rightBargImage}
+                alt="Right"
+                className={styles.sideImage}
+              />
+            </h1>
 
-          <div className={styles.categoryList}>
-            {category.types.map((type) => (
-              <div key={type.id} className={styles.categoryItem}>
-                <Link href={`/products?type_id=${type.id}&color=${color}`}>
-                  <div className={circleClass}>
-                    <img
-                      src={`${Config.baseUrl}${type.image}`}
-                      alt={type.title}
-                      className={styles.circleImage}
-                    />
-                    <div className={styles.circleTitle}>{type.title}</div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+            <div className={styles.categoryList}>
+              {category.types.map((type) => (
+                <div key={type.id} className={styles.categoryItem}>
+                  <Link href={`/products?type_id=${type.id}&color=${color}`}>
+                    <div className={circleClass}>
+                      <img
+                        src={`${Config.baseUrl}${type.image}`}
+                        alt={type.title}
+                        className={styles.circleImage}
+                      />
+                      <div className={styles.circleTitle}>{type.title}</div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </Suspense>
   );
 }
