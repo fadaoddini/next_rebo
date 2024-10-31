@@ -10,9 +10,8 @@ import ConfirmDialog from "./utils/ConfirmDialog";
 
 export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { authStatus, logout } = useAuth(); // وضعیت احراز هویت و تابع logout
-  const router = useRouter(); // استفاده برای هدایت
-
+  const { authStatus, logout } = useAuth(); 
+  const router = useRouter(); 
   const [iconSrc, setIconSrc] = useState({
     question: "/images/question.svg",
     exit: "/images/exit.svg",
@@ -40,23 +39,23 @@ export default function Header() {
   };
 
   const handleLogoutClick = () => {
-    setIsDialogOpen(true); // باز کردن دیالوگ تایید خروج
+    setIsDialogOpen(true); 
   };
 
   const handleConfirmLogout = async () => {
     try {
-      await logout(); // فراخوانی تابع logout از کانتکست
-      router.push("/"); // هدایت به صفحه اصلی پس از خروج
+      await logout(); 
+      router.push("/"); 
     } catch (error) {
       console.error("Error during logout:", error);
-      alert("خطا در خروج. لطفاً دوباره امتحان کنید."); // نمایش پیام خطا در صورت وجود مشکل
+      alert("خطا در خروج. لطفاً دوباره امتحان کنید.");
     } finally {
-      setIsDialogOpen(false); // بستن دیالوگ در هر صورت
+      setIsDialogOpen(false); 
     }
   };
 
   const handleCancelLogout = () => {
-    setIsDialogOpen(false); // بستن دیالوگ بدون خروج
+    setIsDialogOpen(false); 
   };
 
   return (

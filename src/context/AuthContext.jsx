@@ -25,6 +25,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       const csrfToken = Cookies.get("csrftoken");
+      console.log("csrfToken");
+      console.log(csrfToken);
       const response = await axios.post(
         Config.getApiUrl("login", "logout"),
         {},

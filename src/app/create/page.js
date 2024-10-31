@@ -1,25 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import Config from "@/config/config";
 import ProductTypeSelector from "@/components/bazar/Form/ProductTypeSelector";
 import AttributesSelector from "@/components/bazar/Form/AttributeSelector";
 import ImageUploader from "@/components/bazar/Form/ImageUploader";
-import Select from "react-select"; // برای انتخاب نوع بازار
+import Select from "react-select";
 import styles from "@/styles/styleCreate.module.css";
 import FormInputs from "@/components/bazar/Form/FormInputs";
 
 export default function Create() {
-
   const [formData, setFormData] = useState({
     price: "",
     weight: "",
     warranty: "False",
     expire_time: "1",
     description: "",
+    sell_buy: "", // اصلاح شده
     productType: null,
     attributeValues: {},
     images: []
@@ -37,7 +36,7 @@ export default function Create() {
     const fetchProductTypes = async () => {
       try {
         const response = await axios.get(
-          Config.getApiUrl("catalogue", "product_types/")
+          Config.getApiUrl("catalogue", "product_types")
         );
         const typeOptions = response.data.map((type) => ({
           value: type.id,
@@ -49,7 +48,6 @@ export default function Create() {
         setError("خطا در بارگذاری انواع محصولات. لطفاً دوباره تلاش کنید.");
       }
     };
-
     fetchProductTypes();
   }, []);
 
@@ -59,7 +57,7 @@ export default function Create() {
       if (formData.productType) {
         try {
           const response = await axios.get(
-            Config.getApiUrl("catalogue", "product_attributes/"),
+            Config.getApiUrl("catalogue", "product_attributes"),
             {
               params: { product_type_id: formData.productType.value },
             }
@@ -87,14 +85,13 @@ export default function Create() {
         setAttributeOptions({});
       }
     };
-
     fetchAttributes();
   }, [formData.productType]);
 
   const fetchAttributeValues = async (attributeId) => {
     try {
       const response = await axios.get(
-        Config.getApiUrl("catalogue", "attribute_values/"),
+        Config.getApiUrl("catalogue", "attribute_values"),
         {
           params: { attribute_id: attributeId },
         }
@@ -155,7 +152,7 @@ export default function Create() {
       "product_type",
       formData.productType ? formData.productType.value : ""
     );
-    form.append("sell_buy", typeValue);
+    form.append("sell_buy", formData.sell_buy); // اصلاح شده
 
     const attrs = Object.keys(formData.attributeValues).map((attributeId) => ({
       attr: attributeId,
@@ -166,12 +163,11 @@ export default function Create() {
     formData.images.forEach((image, index) => {
       form.append(`image${index}`, image);
     });
-
     form.append("numpic", formData.images.length);
 
     try {
       const response = await axios.post(
-        Config.getApiUrl("catalogue", "add_product_api/"),
+        Config.getApiUrl("catalogue", "add_product_api"),
         form,
         {
           withCredentials: true,
@@ -179,8 +175,6 @@ export default function Create() {
       );
 
       console.log("محصول با موفقیت اضافه شد:", response.data);
-      onProductAdded(response.data);
-      handleClose();
     } catch (err) {
       console.error(
         "خطا در افزودن محصول:",
@@ -196,7 +190,6 @@ export default function Create() {
     <div>
       <h1 className="text-center py-10">ایجاد</h1>
       <div className={styles.container}>
-       
         <form onSubmit={handleSubmit}>
           <div className={styles.choose_bazar}>
             <div className={styles.form_group}>
@@ -205,7 +198,7 @@ export default function Create() {
               </label>
               <Select
                 id="bazarType"
-                value={formData.sellBuy}
+                value={formData.sell_buy}
                 options={[
                   { value: "1", label: "فروش" },
                   { value: "2", label: "خرید" },
@@ -214,7 +207,7 @@ export default function Create() {
                 onChange={(selectedOption) => {
                   setFormData((prevState) => ({
                     ...prevState,
-                    sellBuy: selectedOption ? selectedOption.value : null,
+                    sell_buy: selectedOption ? selectedOption.value : null,
                   }));
                 }}
                 className={styles.form_control}
@@ -260,15 +253,15 @@ export default function Create() {
               />
             </div>
           </div>
-
-          {error && <p className={styles.textDanger}>{error}</p>}
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={loading}
-          >
-            {loading ? "در حال ارسال..." : "ثبت محصول"}
-          </button>
+          <div className="text-center">
+            {loading ? (
+              <button className="btn btn-primary" disabled>
+                در حال ارسال...
+              </button>
+            ) : (
+              <button className="btn btn-primary">ارسال محصول</button>
+            )}
+          </div>
         </form>
       </div>
     </div>
