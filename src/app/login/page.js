@@ -1,52 +1,28 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import Cookies from "js-cookie";
+import axios from "axios";
+import { useAuth } from "@/context/AuthContext"; // استفاده از کانتکست احراز هویت
 import Config from "@/config/config";
 import Image from "next/image";
 import styles from "@/styles/styleLogin.module.css";
 
 const Login = () => {
-  const { authStatus, setAuthStatus } = useAuth(); // وضعیت احراز هویت
+  const { isAuthenticated, loading } = useAuth();
+
   const [mobile, setMobile] = useState("");
   const [toast, setToast] = useState({ message: "", type: "" });
-  const [waitTime, setWaitTime] = useState(0); // زمان انتظار
+  const [waitTime, setWaitTime] = useState(0);
   const router = useRouter();
+
+
   useEffect(() => {
-    console.log("authStatus in Verify:", authStatus); // بررسی وضعیت
-    if (authStatus) {
+    if (!loading && isAuthenticated) {
+     
       router.push("/");
     }
-  }, [authStatus, router]);
+  }, [isAuthenticated, loading, router]);
 
-  useEffect(() => {
-    const accessToken = Cookies.get("accessToken");
-
-    if (accessToken) {
-      axios
-        .get(Config.getApiUrl("login", "checkToken"), { withCredentials: true })
-        .then((response) => {
-          if (response.data.status === "success") {
-            router.push("/");
-          } else {
-            handleInvalidToken();
-          }
-        })
-        .catch((error) => {
-          console.error("خطا در اعتبارسنجی توکن:", error);
-          handleInvalidToken();
-        });
-    } else {
-      router.push("/login");
-    }
-  }, []);
-
-  const handleInvalidToken = () => {
-    Cookies.remove("accessToken");
-    router.push("/login");
-  };
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -66,7 +42,7 @@ const Login = () => {
 
     if (!mobileRegex.test(mobileNumber)) {
       setToast({
-        message: 'شماره موبایل باید در مجموع 11 رقم باشد.',
+        message: "شماره موبایل باید در مجموع 11 رقم باشد.",
         type: "error",
       });
       return;
@@ -86,43 +62,30 @@ const Login = () => {
         { mobile: mobileNumber },
         { headers: { "Content-Type": "application/json" } }
       );
-
-      const { status, wait_time } = response.data; // زمان انتظار را از پاسخ دریافت می‌کنیم
+      const { status, wait_time } = response.data;
 
       if (status === "ok") {
         setToast({
           message: `کد تأیید برای شماره ${mobileNumber} ارسال شد.`,
           type: "success",
         });
-      
-        // تغییر به استفاده از URL کامل به جای آبجکت
-        router.push(`/verify?mobile=${mobileNumber}`);
+
+        router.push(`/verify?mobile=${mobileNumber}`); // هدایت به صفحه تایید
       } else {
         setToast({
-          message: "متأسفانه، ارسال کد تأیید ناموفق بود. لطفاً دوباره تلاش کنید.",
+          message:
+            "متأسفانه، ارسال کد تأیید ناموفق بود. لطفاً دوباره تلاش کنید.",
           type: "error",
         });
         setWaitTime(wait_time);
       }
     } catch (error) {
-      console.error("Error:", error);
       setToast({
         message: "خطایی رخ داده است، لطفاً دوباره تلاش کنید.",
         type: "error",
       });
     }
   };
-
-  // مدیریت تایمر انتظار
-  useEffect(() => {
-    let timer;
-    if (waitTime > 0) {
-      timer = setInterval(() => {
-        setWaitTime((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [waitTime]);
 
   return (
     <div className={styles.container}>
@@ -137,7 +100,9 @@ const Login = () => {
                 width={150}
                 height={150}
               />
-              <p className={styles.enter_text}>لطفا شماره موبایل خود را وارد کنید</p>
+              <p className={styles.enter_text}>
+                لطفا شماره موبایل خود را وارد کنید
+              </p>
               <form onSubmit={handleSubmit}>
                 <div className={styles.input_container}>
                   <span className={styles.fixed_text}>09</span>

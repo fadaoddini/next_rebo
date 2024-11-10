@@ -10,8 +10,20 @@ import ImageUploader from "@/components/bazar/Form/ImageUploader";
 import Select from "react-select";
 import styles from "@/styles/styleCreate.module.css";
 import FormInputs from "@/components/bazar/Form/FormInputs";
+import useCheckToken from "@/hook/useCheckToken";
 
 export default function Create() {
+
+  const isLoggedIn = useCheckToken(); 
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const fetchedToken = localStorage.getItem("accessToken");
+      setToken(fetchedToken);
+    }
+  }, [isLoggedIn]);
+  
   const [formData, setFormData] = useState({
     price: "",
     weight: "",
@@ -170,7 +182,9 @@ export default function Create() {
         Config.getApiUrl("catalogue", "add_product_api"),
         form,
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
         }
       );
 

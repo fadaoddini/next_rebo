@@ -11,7 +11,7 @@ import QueueList from "@/components/bazar/Queue/QueueList";
 import MarketChart from "@/components/bazar/ChartCardBazar/MarketChart";
 
 export default function Chart({ params }) {
-  const { authStatus } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const searchParams = useSearchParams();
   const { id } = params;
   const [chartData, setChartData] = useState([]);
@@ -20,15 +20,29 @@ export default function Chart({ params }) {
   const [buyQueue, setBuyQueue] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    if (!id || !authStatus) return; // بررسی اینکه id و authStatus وجود داشته باشند
+    const storedToken = localStorage.getItem("accessToken");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (!id || !isAuthenticated) return; 
 
     const fetchChart = async () => {
       setLoading(true);
       try {
         const url = Config.getApiUrl("catalogue", `chart/${id}/`);
-        const response = await axios.get(url, { withCredentials: true });
+        const response = await axios.get(url, { 
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (response.status === 200) {
           setChartData(response.data);
         } else {
@@ -84,7 +98,7 @@ export default function Chart({ params }) {
     fetchChart();
     fetchName();
     fetchQueues();
-  }, [id, authStatus]);
+  }, [id, isAuthenticated]);
 
   const sanitizedChartData = chartData.map((item) => ({
     date: item?.date || "",

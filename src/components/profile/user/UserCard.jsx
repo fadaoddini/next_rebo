@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Config from "config/config";
 import styles from "./UserCard.module.css"; // مطمئن شوید که استایل‌های مناسب را اضافه کنید
+import useCheckToken from "@/hook/useCheckToken";
 
 const UserCard = ({
   imageUrl: initialImageUrl,
@@ -12,38 +13,53 @@ const UserCard = ({
   productCount,
 }) => {
   const [isFollowing, setIsFollowing] = useState(false);
-  const [imageUrl, setImageUrl] = useState(
-    initialImageUrl || "/images/avatar.png"
-  );
+  const [imageUrl, setImageUrl] = useState(initialImageUrl || "/images/avatar.png");
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const isLoggedIn = useCheckToken(); 
+  const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
 
+  // چک کردن وضعیت دنبال‌کردن کاربر
   const checkFollowingStatus = async () => {
-    try {
-      const response = await axios.get(
-        Config.getApiUrl("login", `userDetails/${userId}/`),
-        { withCredentials: true }
-      );
-      if (response.data) {
-        setIsFollowing(response.data.isFollowing);
-        setFollowersCount(response.data.followers);
-        setFollowingCount(response.data.following);
+    if (isLoggedIn && token) {
+      try {
+        const response = await axios.get(
+          Config.getApiUrl("login", `userDetails/${userId}`),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.data) {
+          setIsFollowing(response.data.isFollowing);
+          setFollowersCount(response.data.followers);
+          setFollowingCount(response.data.following);
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
       }
-    } catch (error) {
-      console.error("Error fetching user details:", error);
     }
   };
 
   useEffect(() => {
     checkFollowingStatus();
-  }, [userId]);
+  }, [userId, token]);
 
+  // دنبال کردن کاربر
   const handleFollow = async () => {
+    if (!token) return;
     try {
       const response = await axios.post(
         Config.getApiUrl("login", "follow/"),
         { user_id: userId },
-        { withCredentials: true }
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200 || response.status === 201) {
         setIsFollowing(true);
@@ -54,13 +70,18 @@ const UserCard = ({
     }
   };
 
+  // دنبال نکردن کاربر
   const handleUnfollow = async () => {
+    if (!token) return;
     try {
       const response = await axios.delete(
         Config.getApiUrl("login", "unfollow/"),
         {
           data: { user_id: userId },
-          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       if (response.status === 200 || response.status === 204) {
@@ -72,6 +93,7 @@ const UserCard = ({
     }
   };
 
+  // آپلود تصویر جدید برای پروفایل
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -88,8 +110,8 @@ const UserCard = ({
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
             },
-            withCredentials: true,
           }
         );
 
@@ -132,18 +154,18 @@ const UserCard = ({
         <div className={styles.divider}></div>
         <div className={styles.statItem}>
           <span className={styles.badi}>{followersCount}</span>
-          <span>دنبال‌کننده ها</span>
+          <span>دنبال‌کننده‌ها</span>
         </div>
         <div className={styles.divider}></div>
         <div className={styles.statItem}>
           <span className={styles.badi}>{followingCount}</span>
-          <span>دنبال‌شده ها</span>
+          <span>دنبال‌شده‌ها</span>
         </div>
       </div>
 
       <div className={styles.buttons}>
-        {userId !== userIdViewer &&
-          (isFollowing ? (
+        {userId !== userIdViewer && isLoggedIn && (
+          isFollowing ? (
             <button className={styles.button_unfollow} onClick={handleUnfollow}>
               دنبال نکردن
             </button>
@@ -151,9 +173,12 @@ const UserCard = ({
             <button className={styles.button_follow} onClick={handleFollow}>
               دنبال کردن
             </button>
-          ))}
-
-        <button className={styles.button_profile} onClick="/profile">
+          )
+        )}
+        <button
+          className={styles.button_profile}
+          onClick={() => window.location.href = `/profile/${userId}`}
+        >
           مشاهده پروفایل
         </button>
       </div>

@@ -1,17 +1,19 @@
 "use client"; // اضافه کردن این خط
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; 
-import { useAuth } from "@/context/AuthContext"; 
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "@/context/AuthContext"; // Import context to access auth data
 import styles from "@/styles/header.module.css";
 import ConfirmDialog from "./utils/ConfirmDialog";
 
 export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { authStatus, logout } = useAuth(); 
-  const router = useRouter(); 
+
+  const router = useRouter();
+  const { user, isAuthenticated, logout } = useAuth(); // استفاده از کانتکست برای دسترسی به وضعیت احراز هویت
+
   const [iconSrc, setIconSrc] = useState({
     question: "/images/question.svg",
     exit: "/images/exit.svg",
@@ -27,7 +29,7 @@ export default function Header() {
   const handleMouseEnter = (icon) => {
     setIconSrc((prevState) => ({
       ...prevState,
-      [icon]: `/images/${icon}_hover.svg`,
+      [icon]: `/images/${icon}_hover.svg`, // تغییر آیکون به هنگام hover
     }));
   };
 
@@ -45,12 +47,12 @@ export default function Header() {
   const handleConfirmLogout = async () => {
     try {
       await logout(); 
-      router.push("/"); 
+     
     } catch (error) {
       console.error("Error during logout:", error);
       alert("خطا در خروج. لطفاً دوباره امتحان کنید.");
     } finally {
-      setIsDialogOpen(false); 
+      setIsDialogOpen(false); // بستن دیالوگ بعد از خروج
     }
   };
 
@@ -72,6 +74,7 @@ export default function Header() {
             />
 
             <div className={styles.left_menu}>
+              {/* خانه */}
               <div
                 className={styles.tooltip_container}
                 onMouseEnter={() => handleMouseEnter("home")}
@@ -89,6 +92,7 @@ export default function Header() {
                 </Link>
               </div>
 
+              {/* بازار */}
               <div
                 className={styles.tooltip_container}
                 onMouseEnter={() => handleMouseEnter("category")}
@@ -106,6 +110,7 @@ export default function Header() {
                 </Link>
               </div>
 
+              {/* ایجاد */}
               <div
                 className={styles.tooltip_container}
                 onMouseEnter={() => handleMouseEnter("create")}
@@ -123,6 +128,7 @@ export default function Header() {
                 </Link>
               </div>
 
+              {/* پروفایل */}
               <div
                 className={styles.tooltip_container}
                 onMouseEnter={() => handleMouseEnter("profile")}
@@ -140,8 +146,8 @@ export default function Header() {
                 </Link>
               </div>
 
-              {/* دکمه خروج */}
-              {authStatus && (
+              {/* خروج */}
+              {isAuthenticated && (
                 <div
                   className={styles.tooltip_container}
                   onMouseEnter={() => handleMouseEnter("exit")}
@@ -159,7 +165,8 @@ export default function Header() {
                 </div>
               )}
 
-              {!authStatus && (
+              {/* ورود (در صورتی که کاربر وارد نشده باشد) */}
+              {!isAuthenticated && (
                 <div
                   className={styles.tooltip_container}
                   onMouseEnter={() => handleMouseEnter("login")}

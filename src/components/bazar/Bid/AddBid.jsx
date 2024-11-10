@@ -7,6 +7,15 @@ const AddBid = ({ productId, name, lable, top_price_bid, onBidSubmitted, onBidLi
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bidPrice, setBidPrice] = useState("");
   const [bidWeight, setBidWeight] = useState("");
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
+
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -21,11 +30,13 @@ const AddBid = ({ productId, name, lable, top_price_bid, onBidSubmitted, onBidLi
 
     try {
       const response = await axios.post(
-        Config.getApiUrl("bid", "add_bid_api/"),
+        Config.getApiUrl("bid", "add_bid_api"),
         bidData, // داده‌های ارسال شده
         {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true, // ارسال کوکی‌ها
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       

@@ -1,18 +1,20 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Config from "@/config/config";
 import Link from "next/link";
 import styles from "@/styles/category.module.css";
 import { useSearchParams } from "next/navigation";
-import useCheckToken from "@/hook/useCheckToken";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Category() {
-
-
   const searchParams = useSearchParams();
   const [color, setColor] = useState(null);
+  const { user, isAuthenticated, logout, loading } = useAuth();
+
+  const [categories, setCategories] = useState([]);
+
   useEffect(() => {
     setColor(searchParams.get("color"));
   }, [searchParams]);
@@ -28,75 +30,75 @@ export default function Category() {
       : "/images/right_barg_red.png";
   const circleClass =
     color === "buy"
-      ? `${styles.circleContainerGreen} `
-      : `${styles.circleContainerRed} `;
+      ? `${styles.circleContainerGreen}`
+      : `${styles.circleContainerRed}`;
   const titleClass =
-    color === "buy" ? `${styles.titleGreen} ` : `${styles.titleRed} `;
+    color === "buy" ? `${styles.titleGreen}` : `${styles.titleRed}`;
 
-  
-  const [categories, setCategories] = useState([]);
-  const isLoggedIn = useCheckToken(); 
-  
   useEffect(() => {
     const fetchData = async () => {
-      if (isLoggedIn) {
+      if (isAuthenticated) {
         try {
+          const token = localStorage.getItem("accessToken");
           const response = await axios.get(
             Config.getApiUrl("catalogue", "all_type_web"),
             {
-              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
             }
           );
 
-          
           setCategories(response.data);
         } catch (error) {
           console.error("Error fetching data:", error);
+          
         }
       }
     };
 
     fetchData();
-  }, [isLoggedIn]); 
+  }, [isAuthenticated]);
+
+  if (loading) return <div>در حال بارگذاری...</div>;
 
   return (
-    <Suspense fallback={<div>در حال بارگذاری...</div>}>
-      <div className={styles.categoryContainer}>
-        {categories.map((category) => (
-          <div key={category.cat_id}>
-            <h1 className={titleClass}>
-              <img
-                src={leftBargImage}
-                alt="Left"
-                className={styles.sideImage}
-              />
-              {category.category}
-              <img
-                src={rightBargImage}
-                alt="Right"
-                className={styles.sideImage}
-              />
-            </h1>
+    <div className={styles.categoryContainer}>
+      {categories.map((category) => (
+        <div key={category.cat_id}>
+          <h1 className={titleClass}>
+            <img
+              src={leftBargImage}
+              alt="Left"
+              className={styles.sideImage}
+            />
+            {category.category}
+            <img
+              src={rightBargImage}
+              alt="Right"
+              className={styles.sideImage}
+            />
+          </h1>
 
-            <div className={styles.categoryList}>
-              {category.types.map((type) => (
-                <div key={type.id} className={styles.categoryItem}>
-                  <Link href={`/products?type_id=${type.id}&color=${color}`}>
-                    <div className={circleClass}>
-                      <img
-                        src={`${Config.baseUrl}${type.image}`}
-                        alt={type.title}
-                        className={styles.circleImage}
-                      />
-                      <div className={styles.circleTitle}>{type.title}</div>
-                    </div>
-                  </Link>
-                </div>
-              ))}
-            </div>
+          <div className={styles.categoryList}>
+            {category.types.map((type) => (
+              <div key={type.id} className={styles.categoryItem}>
+                <Link href={`/products?type_id=${type.id}&color=${color}`}>
+                  <div className={circleClass}>
+                    <img
+                      src={`${Config.baseUrl}${type.image}`}
+                      alt={type.title}
+                      className={styles.circleImage}
+                    />
+                    <div className={styles.circleTitle}>{type.title}</div>
+                  </div>
+                </Link>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </Suspense>
+        </div>
+      ))}
+    </div>
   );
 }

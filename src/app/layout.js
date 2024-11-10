@@ -1,6 +1,6 @@
 import '@/styles/globals.css';
 import Header from '@/components/Header';
-import { AuthProvider } from '@/context/AuthContext'; // وارد کردن AuthProvider
+import { AuthProvider } from '@/context/AuthContext'; 
 import { Suspense } from 'react';
 
 export const metadata = {
