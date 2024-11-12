@@ -1,4 +1,4 @@
-"use client"; // اضافه کردن این خط
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const router = useRouter();
-  const { user, isAuthenticated, logout } = useAuth(); // استفاده از کانتکست برای دسترسی به وضعیت احراز هویت
+  const { user, isAuthenticated, logout } = useAuth();
 
   const [iconSrc, setIconSrc] = useState({
     question: "/images/question.svg",
@@ -29,7 +29,7 @@ export default function Header() {
   const handleMouseEnter = (icon) => {
     setIconSrc((prevState) => ({
       ...prevState,
-      [icon]: `/images/${icon}_hover.svg`, // تغییر آیکون به هنگام hover
+      [icon]: `/images/${icon}_hover.svg`,
     }));
   };
 
@@ -41,27 +41,27 @@ export default function Header() {
   };
 
   const handleLogoutClick = () => {
-    setIsDialogOpen(true); 
+    setIsDialogOpen(true);
   };
 
   const handleConfirmLogout = async () => {
     try {
-      await logout(); 
-     
+      await logout();
     } catch (error) {
       console.error("Error during logout:", error);
       alert("خطا در خروج. لطفاً دوباره امتحان کنید.");
     } finally {
-      setIsDialogOpen(false); // بستن دیالوگ بعد از خروج
+      setIsDialogOpen(false);
     }
   };
 
   const handleCancelLogout = () => {
-    setIsDialogOpen(false); 
+    setIsDialogOpen(false);
   };
 
   return (
     <>
+      {/* هدر برای دسکتاپ */}
       <header className={styles.header}>
         <div className={styles.navbar_wrapper}>
           <nav className={styles.navbar_container}>
@@ -83,8 +83,8 @@ export default function Header() {
                 <Link href="/">
                   <Image
                     src={iconSrc.home}
-                    alt=" خانه"
-                    className={`${styles.icon} ${styles.icon_question}`}
+                    alt="خانه"
+                    className={styles.icon}
                     width={24}
                     height={24}
                   />
@@ -101,8 +101,8 @@ export default function Header() {
                 <Link href="/bazar">
                   <Image
                     src={iconSrc.category}
-                    alt=" بازار "
-                    className={`${styles.icon} ${styles.icon_question}`}
+                    alt="بازار"
+                    className={styles.icon}
                     width={34}
                     height={34}
                   />
@@ -119,8 +119,8 @@ export default function Header() {
                 <Link href="/create">
                   <Image
                     src={iconSrc.create}
-                    alt="ایجاد "
-                    className={`${styles.icon} ${styles.icon_question}`}
+                    alt="ایجاد"
+                    className={styles.icon}
                     width={34}
                     height={34}
                   />
@@ -138,7 +138,7 @@ export default function Header() {
                   <Image
                     src={iconSrc.profile}
                     alt="پروفایل"
-                    className={`${styles.icon} ${styles.icon_profile}`}
+                    className={styles.icon}
                     width={34}
                     height={34}
                   />
@@ -152,42 +152,47 @@ export default function Header() {
                   className={styles.tooltip_container}
                   onMouseEnter={() => handleMouseEnter("exit")}
                   onMouseLeave={() => handleMouseLeave("exit")}
-                  onClick={handleLogoutClick} // فراخوانی دیالوگ خروج
+                  onClick={handleLogoutClick}
                 >
                   <Image
                     src={iconSrc.exit}
                     alt="خروج"
-                    className={`${styles.icon} ${styles.icon_exit}`}
+                    className={styles.icon}
                     width={34}
                     height={34}
                   />
                   <span className={styles.nav_title}>خروج</span>
                 </div>
               )}
-
-              {/* ورود (در صورتی که کاربر وارد نشده باشد) */}
-              {!isAuthenticated && (
-                <div
-                  className={styles.tooltip_container}
-                  onMouseEnter={() => handleMouseEnter("login")}
-                  onMouseLeave={() => handleMouseLeave("login")}
-                >
-                  <Link href="/login">
-                    <Image
-                      src={iconSrc.login}
-                      alt=" ورود"
-                      className={`${styles.icon} ${styles.icon_question}`}
-                      width={24}
-                      height={24}
-                    />
-                    <span className={styles.nav_title}>ورود</span>
-                  </Link>
-                </div>
-              )}
             </div>
           </nav>
         </div>
       </header>
+
+      {/* منوی موبایل */}
+      <div className={styles.mobile_navbar}>
+        <Link href="/">
+          <Image src={iconSrc.home} alt="خانه" width={24} height={24} />
+        </Link>
+        <Link href="/bazar">
+          <Image src={iconSrc.category} alt="بازار" width={24} height={24} />
+        </Link>
+        <Link href="/create">
+          <Image src={iconSrc.create} alt="ایجاد" width={24} height={24} />
+        </Link>
+        <Link href="/profile">
+          <Image src={iconSrc.profile} alt="پروفایل" width={24} height={24} />
+        </Link>
+        {isAuthenticated && (
+          <Image
+            src={iconSrc.exit}
+            alt="خروج"
+            width={24}
+            height={24}
+            onClick={handleLogoutClick}
+          />
+        )}
+      </div>
 
       {/* نمایش دیالوگ تایید خروج */}
       {isDialogOpen && (
