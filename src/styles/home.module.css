@@ -1,118 +1,120 @@
 /* استایل کلی */
 .container {
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    text-align: center;
-    flex-wrap: wrap;
-  }
-  
-  /* بخش اسلایدر */
-  .sliderSection {
-    display: flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+/* بخش اسلایدر */
+.sliderSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.phoneFrame {
+  width: 300px;
+  height: 600px;
+  border: 16px solid #000;
+  border-radius: 36px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  background-color: #f0f0f0;
+  position: relative;
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sliderButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.after {
+  width: 36px;
+  margin-bottom: 60px;
+}
+.navButton {
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.navButton:hover {
+  opacity: 0.8;
+}
+
+/* بخش اطلاعات */
+.infoSection {
+  flex: 1;
+  max-width: 400px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 16px;
+  text-align: right;
+  direction: rtl;
+}
+
+.description {
+  font-size: 14px;
+  margin-bottom: 40px;
+  text-align: justify;
+  direction: rtl;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.marketBtn,
+.directBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 60px;
+}
+
+.marketBtn {
+  background-color: #667a44;
+  color: white;
+}
+
+.directBtn {
+  background-color: #974e4e;
+  color: white;
+}
+
+.marketBtn:hover,
+.directBtn:hover {
+  opacity: 0.8;
+}
+
+/* استایل‌های موبایل */
+@media (max-width: 768px) {
+  .container {
     flex-direction: column;
-    align-items: center;
+    background-color: var(--background);
   }
 
   .phoneFrame {
-    width: 300px;
-    height: 600px;
-    border: 16px solid #000;
-    border-radius: 36px;
-    overflow: hidden;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    background-color: #f0f0f0;
-    position: relative;
-  }
-  
-  .slide {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: 500px;
+    background-color: var(--background);
   }
-  
-  .sliderButtons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .after{
-    width: 36px;
-  }
-  .navButton {
-
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .navButton:hover {
-    opacity: 0.8;
-  }
-  
-  /* بخش اطلاعات */
-  .infoSection {
-    flex: 1;
-    max-width: 400px;
-  }
-  
-  .title {
-    font-size: 24px;
-    margin-bottom: 16px;
-    text-align: right;
-    direction: rtl;
-  }
-  
-  .description {
-    font-size: 14px;
-    margin-bottom: 20px;
-    text-align: justify;
-    direction: rtl;
-  }
-  
-  .buttons {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .marketBtn, .directBtn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .marketBtn {
-    background-color: #667A44;
-    color: white;
-  }
-  
-  .directBtn {
-    background-color: #974E4E;
-    color: white;
-  }
-  
-  .marketBtn:hover, .directBtn:hover {
-    opacity: 0.8;
-  }
-  
-  /* استایل‌های موبایل */
-  @media (max-width: 768px) {
-    .container {
-      flex-direction: column;
-    }
-  
- 
-  
-    .phoneFrame {
-      width: 100%;
-      height: 500px;
-    }
-  }
-  
+}

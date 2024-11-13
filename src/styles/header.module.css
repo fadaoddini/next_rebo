@@ -136,10 +136,10 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: var(--background);
+    background-color: var(--white);
     padding: 10px;
-    border-top: 1px solid var(--coper);
     z-index: 1000;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
 
   .mobile_navbar img {

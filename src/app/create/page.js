@@ -13,8 +13,7 @@ import FormInputs from "@/components/bazar/Form/FormInputs";
 import useCheckToken from "@/hook/useCheckToken";
 
 export default function Create() {
-
-  const isLoggedIn = useCheckToken(); 
+  const isLoggedIn = useCheckToken();
   const [token, setToken] = useState(null);
 
   useEffect(() => {
@@ -23,17 +22,17 @@ export default function Create() {
       setToken(fetchedToken);
     }
   }, [isLoggedIn]);
-  
+
   const [formData, setFormData] = useState({
     price: "",
     weight: "",
     warranty: "False",
     expire_time: "1",
     description: "",
-    sell_buy: "", // اصلاح شده
+    sell_buy: "1",
     productType: null,
     attributeValues: {},
-    images: []
+    images: [],
   });
 
   const [productTypes, setProductTypes] = useState([]);
@@ -183,7 +182,7 @@ export default function Create() {
         form,
         {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -202,42 +201,47 @@ export default function Create() {
 
   return (
     <div>
-      <h1 className="text-center py-10">ایجاد</h1>
       <div className={styles.container}>
         <form onSubmit={handleSubmit}>
+       
+        <div className={styles.toptop}> 
+        <label className={styles.lable_form}>نوع آگهی</label>
           <div className={styles.choose_bazar}>
-            <div className={styles.form_group}>
-              <label htmlFor="bazar_type" className={styles.label}>
-                نوع بازار
-              </label>
-              <Select
-                id="bazarType"
-                value={formData.sell_buy}
-                options={[
-                  { value: "1", label: "فروش" },
-                  { value: "2", label: "خرید" },
-                ]}
-                isClearable
-                onChange={(selectedOption) => {
-                  setFormData((prevState) => ({
-                    ...prevState,
-                    sell_buy: selectedOption ? selectedOption.value : null,
-                  }));
-                }}
-                className={styles.form_control}
-                placeholder="انتخاب کنید..."
-                styles={{
-                  control: (base) => ({
-                    ...base,
-                    border: "1px solid #ccc",
-                    boxShadow: "none",
-                    "&:hover": { borderColor: "#007bff" },
-                  }),
-                  placeholder: (base) => ({ ...base, color: "#888" }),
-                }}
-              />
+          
+            <div className={styles.tabs}>
+              <button
+                className={`${styles.tab} ${
+                  formData.sell_buy === "1" ? styles.active : ""
+                }`}
+                onClick={() =>
+                  setFormData((prevState) => ({ ...prevState, sell_buy: "1" }))
+                }
+              >
+                فروش
+              </button>
+              <button
+                className={`${styles.tab} ${
+                  formData.sell_buy === "2" ? styles.active : ""
+                }`}
+                onClick={() =>
+                  setFormData((prevState) => ({ ...prevState, sell_buy: "2" }))
+                }
+              >
+                خرید
+              </button>
             </div>
           </div>
+          </div>
+         
+
+          <div>
+              <ImageUploader
+                formData={formData}
+                setFormData={setFormData}
+                imagePreviews={imagePreviews}
+                setImagePreviews={setImagePreviews}
+              />
+            </div>
           <div className={styles.box_attr}>
             <ProductTypeSelector
               formData={formData}
@@ -254,27 +258,23 @@ export default function Create() {
               />
             )}
           </div>
+          
           <div className={styles.all_row}>
-            <div className={styles.right_row}>
+       
               <FormInputs formData={formData} handleChange={handleChange} />
-            </div>
-            <div className={styles.left_row}>
-              <ImageUploader
-                formData={formData}
-                setFormData={setFormData}
-                imagePreviews={imagePreviews}
-                setImagePreviews={setImagePreviews}
-              />
-            </div>
+         
+            
           </div>
-          <div className="text-center">
+          <div className={styles.all_row}>
+          <div className={styles.text_center}>
             {loading ? (
-              <button className="btn btn-primary" disabled>
+              <button className={styles.btn_load} disabled>
                 در حال ارسال...
               </button>
             ) : (
-              <button className="btn btn-primary">ارسال محصول</button>
+              <button className={styles.btn_send}>ارسال محصول</button>
             )}
+          </div>
           </div>
         </form>
       </div>

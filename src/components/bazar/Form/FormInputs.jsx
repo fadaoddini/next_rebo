@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./FormStyleInpute.module.css";
+import styles from "./FormStyle.module.css"
 
 const FormInputs = ({ formData, handleChange }) => (
   <div className={styles.form_grid}>

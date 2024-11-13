@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import styles from "./ImageUploader.module.css"; // استایل‌های مربوط به کامپوننت
+import styles from "./ImageUploader.module.css";
 
-const ImageUploader = ({ formData, setFormData, imagePreviews, setImagePreviews }) => {
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: "image/*",
-    onDrop: (acceptedFiles) => {
+const ImageUploader = ({
+  formData,
+  setFormData,
+  imagePreviews,
+  setImagePreviews,
+}) => {
+  const onDrop = useCallback(
+    (acceptedFiles) => {
       const newImages = acceptedFiles.filter(
         (file) => !formData.images.some((img) => img.name === file.name)
       );
@@ -26,9 +30,19 @@ const ImageUploader = ({ formData, setFormData, imagePreviews, setImagePreviews 
         ]);
       }
     },
+    [formData, setFormData, setImagePreviews]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/*",
+    onDrop,
   });
 
-  const handleRemoveImage = (index) => {
+  const handleRemoveImage = (index, event) => {
+    // جلوگیری از پخش شدن رویداد کلیک
+    event.stopPropagation();
+
+    // حذف Object URL
     URL.revokeObjectURL(imagePreviews[index].preview);
 
     const newImages = formData.images.filter((_, i) => i !== index);
@@ -48,9 +62,7 @@ const ImageUploader = ({ formData, setFormData, imagePreviews, setImagePreviews 
       </label>
       <div {...getRootProps({ className: styles.dropzone })}>
         <input {...getInputProps()} id="imageUploader" />
-        <p>بکشید و رها کنید یا کلیک کنید برای انتخاب تصاویر</p>
-      </div>
-      <div className={styles.image_preview_section}>
+        <div className={styles.add_image_icon}>+</div>
         <div className={styles.image_preview_list}>
           {imagePreviews.map((file, index) => (
             <div key={index} className={styles.image_list_item}>
@@ -58,14 +70,13 @@ const ImageUploader = ({ formData, setFormData, imagePreviews, setImagePreviews 
                 src={file.preview}
                 alt={`Preview ${index}`}
                 className={styles.image_preview}
-                onLoad={() => URL.revokeObjectURL(file.preview)}
               />
               <button
                 type="button"
                 className={styles.remove_button}
-                onClick={() => handleRemoveImage(index)}
+                onClick={(e) => handleRemoveImage(index, e)} // جلوگیری از باز شدن کادر آپلود هنگام کلیک بر روی دکمه حذف
               >
-                حذف
+                ×
               </button>
             </div>
           ))}
