@@ -4,8 +4,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 80%;
+    margin: 110px 10% 0 10%;
     align-items: center;
   }
+
 
 .header {
   display: flex;
@@ -38,7 +41,7 @@
 }
 
 .fullRow {
-  flex-basis: 100%;
+  flex-basis: 90%;
 }
 
 .submitButton {
@@ -62,6 +65,7 @@
 .box_attr {
   width: 100%;
   float: right;
+  margin-bottom: 20px;
 }
 
 .all_row {
@@ -89,7 +93,8 @@
   align-items: center;
   border: 1px solid var(--brown);
   border-radius: 15px;
-  width: 400px;
+  width: 100%;
+  margin-top: 10px;
   overflow: hidden;
 }
 
@@ -120,7 +125,7 @@
   display: flex;
   flex-direction: row;
   justify-items: right;
-
+  font-size: 0.8rem;
 }
 .text_center {
   display: flex;

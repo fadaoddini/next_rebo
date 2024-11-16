@@ -1,6 +1,6 @@
 const Config = {
-  baseUrl: 'https://app.rebo.ir',
-  apiVersion: 'v1', 
+  baseUrl: 'http://localhost:8000',
+  apiVersion: 'v1',
 
   // تابعی برای ساخت URL کامل با توجه به نسخه API و endpoint
   getApiUrl: (segment, endpoint, params = {}) => {

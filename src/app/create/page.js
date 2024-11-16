@@ -51,7 +51,7 @@ export default function Create() {
         );
         const typeOptions = response.data.map((type) => ({
           value: type.id,
-          label: type.title,
+          label: `${type.name} ${type.title}`,
         }));
         setProductTypes(typeOptions);
       } catch (err) {
@@ -202,7 +202,7 @@ export default function Create() {
   return (
     <div>
       <div className={styles.container}>
-        <form onSubmit={handleSubmit}>
+        <form className={styles.body_form} onSubmit={handleSubmit}>
        
         <div className={styles.toptop}> 
         <label className={styles.lable_form}>نوع آگهی</label>

@@ -1,11 +1,94 @@
-import styles from './profile.module.css'; // ایمپورت CSS Modules مخصوص صفحه پروفایل
+"use client";
+
+import styles from "@/styles/profile.module.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Config from "@/config/config";
+import UserCard from "@/components/profile/myuser/UserCard";
+import { useAuth } from "@/context/AuthContext";
+import UserInfo from "@/components/profile/info/UserInfo";
 
 export default function Profile() {
+  const { user, isAuthenticated } = useAuth();
+  const [error, setError] = useState(null);
+  const [user_info, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+
+  const handleEdit = () => alert("ویرایش اطلاعات فردی");
+  const handleSuggestions = () => alert("پیشنهادات من");
+  const handleAds = () => alert("آگهی های من");
+  const handleSaved = () => alert("ذخیره شده ها");
+  const handleLogout = () => alert("خروج از حساب کاربری");
+
+  // دریافت توکن از localStorage
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      if (!token) return;
+      const response = await axios.get(
+        Config.getApiUrl("login", "profile/info"),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setError(error);
+    }
+  };
+
+  // بارگذاری اطلاعات پس از تنظیم token
+  useEffect(() => {
+    if (token && isAuthenticated) {
+      fetchData();
+    }
+  }, [token, isAuthenticated]);
+
+  // نمایش خطا (در صورت وجود)
+  if (error) {
+    return <div>خطا در دریافت اطلاعات: {error.message}</div>;
+  }
+
+  // در صورتی که اطلاعات کاربر بارگذاری نشده است
+  if (!user_info) {
+    return <div>در حال بارگذاری...</div>;
+  }
+
   return (
-    <div>
-      <h1 className={styles.profileHeader}>پروفایل کاربری</h1>
-      <div className={styles.profileContent}>
-        <p>محتوای پروفایل...</p>
+    <div className={`${styles.container}`}>
+      <div className={styles.layout}>
+        <div className={styles.right}>
+          <UserInfo
+            onEdit={handleEdit}
+            onSuggestions={handleSuggestions}
+            onAds={handleAds}
+            onSaved={handleSaved}
+            onLogout={handleLogout}
+          />
+        </div>
+
+        <div className={styles.left}>
+          {isAuthenticated && user_info && (
+            <UserCard
+              imageUrl={`${Config.baseUrl}${user_info.image}`}
+              name={`${user_info.first_name} ${user_info.last_name}`}
+              mobile={user_info.mobile}
+              userId={user_info.id}
+              userIdViewer={user_info?.id}
+              productCount={user_info.product_count}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

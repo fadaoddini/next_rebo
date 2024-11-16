@@ -3,6 +3,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
+  padding: 5px;
   direction: rtl;
 }
 
@@ -14,7 +15,7 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 0.7rem;
   color: #333;
 }
 
@@ -23,7 +24,7 @@
   padding: 10px;
   border: 1px solid var(--brown);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 0.8rem;
   color: #333;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -44,7 +45,7 @@ textarea.form_control {
   padding: 10px;
   border-radius: 8px;
   border: 2px solid var(--brown);
-  font-size: 14px;
+  font-size: 0.8rem;
   color: #333;
   background-color: white;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -103,7 +104,7 @@ button.form_button:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
+  font-size: 0.8rem;
   color: var(--brown);
 }
 
@@ -134,7 +135,7 @@ button.form_button:disabled {
   border-radius: 50%;
   padding: 5px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 0.8rem;
 }
 
 .form_group .remove_button:hover {
