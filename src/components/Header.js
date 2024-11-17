@@ -110,7 +110,37 @@ export default function Header() {
                 </Link>
               </div>
 
-              {/* ایجاد */}
+
+
+              
+
+              {!isAuthenticated && (
+                <>
+                <div
+                className={styles.tooltip_container}
+                onMouseEnter={() => handleMouseEnter("exit")}
+                onMouseLeave={() => handleMouseLeave("exit")}
+              >
+                <Link href="/login">
+                  <Image
+                    src={iconSrc.exit}
+                    alt="ورود"
+                    className={styles.icon}
+                    width={34}
+                    height={34}
+                  />
+                  <span className={styles.nav_title}>ورود</span>
+                </Link>
+              </div>
+
+                </>
+                )}
+
+             
+              {isAuthenticated && (
+                <>
+
+
               <div
                 className={styles.tooltip_container}
                 onMouseEnter={() => handleMouseEnter("create")}
@@ -128,7 +158,7 @@ export default function Header() {
                 </Link>
               </div>
 
-              {/* پروفایل */}
+
               <div
                 className={styles.tooltip_container}
                 onMouseEnter={() => handleMouseEnter("profile")}
@@ -146,8 +176,6 @@ export default function Header() {
                 </Link>
               </div>
 
-              {/* خروج */}
-              {isAuthenticated && (
                 <div
                   className={styles.tooltip_container}
                   onMouseEnter={() => handleMouseEnter("exit")}
@@ -163,6 +191,7 @@ export default function Header() {
                   />
                   <span className={styles.nav_title}>خروج</span>
                 </div>
+                </>
               )}
             </div>
           </nav>
@@ -177,13 +206,20 @@ export default function Header() {
         <Link href="/bazar">
           <Image src={iconSrc.category} alt="بازار" width={24} height={24} />
         </Link>
-        <Link href="/create">
+       
+        {!isAuthenticated && (
+          <Link href="/login">
+          <Image src={iconSrc.exit} alt="ورود" width={24} height={24} />
+        </Link>
+        )}
+        {isAuthenticated && (
+          <>
+           <Link href="/create">
           <Image src={iconSrc.create} alt="ایجاد" width={24} height={24} />
         </Link>
         <Link href="/profile">
           <Image src={iconSrc.profile} alt="پروفایل" width={24} height={24} />
         </Link>
-        {isAuthenticated && (
           <Image
             src={iconSrc.exit}
             alt="خروج"
@@ -191,6 +227,9 @@ export default function Header() {
             height={24}
             onClick={handleLogoutClick}
           />
+
+
+          </>
         )}
       </div>
 
