@@ -3,6 +3,7 @@ import axios from "axios";
 import Config from "config/config";
 import styles from "./UserCard.module.css"; // مطمئن شوید که استایل‌های مناسب را اضافه کنید
 import useCheckToken from "@/hook/useCheckToken";
+import UserInfo from "../info/UserInfo";
 
 const UserCard = ({
   imageUrl: initialImageUrl,
@@ -128,8 +129,10 @@ const UserCard = ({
   };
 
   return (
-    <div>
-      <h3 className={styles.name_user}>محمد سعید فداالدینی</h3>
+    <div className={styles.profile_section}>
+      <h3 className={styles.name_user}> 
+        {name}
+      </h3>
 
       <div className={styles.card}>
         <div className={styles.content}>

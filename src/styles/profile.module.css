@@ -14,19 +14,24 @@
 
 /* ستون چپ */
 .left {
-  width: 40%;
+  width: 70%;
   padding: 0px;
   height: 100%;
   margin-right: 10px;
 }
-
+.row_right{
+  display: flex;
+  max-width: 410px;
+  flex-direction: row;
+}
 /* ستون راست */
 .right {
-  width: 60%;
+  width: 30%;
   text-align: center;
   border-radius: 5px;
   padding: 0px;
   height: 100%;
+
 }
 
 /* استایل تیتر */
@@ -91,7 +96,7 @@
 }
 
 /* استایل مخصوص موبایل */
-@media (max-width: 1150px) {
+@media (max-width: 974px) {
   .layout {
     display: flex;
     flex-direction: column; /* ستون عمودی */
@@ -103,4 +108,9 @@
     margin-right: 0;
     margin-bottom: 20px; /* فاصله بین ردیف‌ها */
   }
+}
+.body_tab{
+  border-radius: 25px;
+  background-color: var(--crown);
+  
 }

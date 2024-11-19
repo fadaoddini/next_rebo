@@ -7,18 +7,16 @@ import Config from "@/config/config";
 import UserCard from "@/components/profile/myuser/UserCard";
 import { useAuth } from "@/context/AuthContext";
 import UserInfo from "@/components/profile/info/UserInfo";
+import EditProfileForm from "@/components/profile/user/EditProfileForm";
 
 export default function Profile() {
   const { user, isAuthenticated } = useAuth();
   const [error, setError] = useState(null);
   const [user_info, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [activeTab, setActiveTab] = useState("edit"); // مدیریت تب فعال
 
-  const handleEdit = () => alert("ویرایش اطلاعات فردی");
-  const handleSuggestions = () => alert("پیشنهادات من");
-  const handleAds = () => alert("آگهی های من");
-  const handleSaved = () => alert("ذخیره شده ها");
-  const handleLogout = () => alert("خروج از حساب کاربری");
+  const handleTabClick = (tab) => setActiveTab(tab); // تغییر تب فعال
 
   // دریافت توکن از localStorage
   useEffect(() => {
@@ -47,47 +45,69 @@ export default function Profile() {
     }
   };
 
-  // بارگذاری اطلاعات پس از تنظیم token
   useEffect(() => {
     if (token && isAuthenticated) {
       fetchData();
     }
   }, [token, isAuthenticated]);
 
-  // نمایش خطا (در صورت وجود)
   if (error) {
     return <div>خطا در دریافت اطلاعات: {error.message}</div>;
   }
 
-  // در صورتی که اطلاعات کاربر بارگذاری نشده است
   if (!user_info) {
     return <div>در حال بارگذاری...</div>;
   }
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "edit":
+        return (
+          <EditProfileForm 
+            token={token} 
+            user_info={user_info} 
+          />
+        );
+      case "suggestions":
+        return <div>پیشنهادات من</div>;
+      case "ads":
+        return <div>آگهی‌های من</div>;
+      case "saved":
+        return <div>ذخیره شده‌ها</div>;
+      default:
+        return <div>محتوا پیدا نشد!</div>;
+    }
+  };
+  
   return (
     <div className={`${styles.container}`}>
       <div className={styles.layout}>
         <div className={styles.right}>
-          <UserInfo
-            onEdit={handleEdit}
-            onSuggestions={handleSuggestions}
-            onAds={handleAds}
-            onSaved={handleSaved}
-            onLogout={handleLogout}
-          />
+          <div className={styles.row_right}>
+            {isAuthenticated && user_info && (
+              <UserCard
+                imageUrl={`${Config.baseUrl}${user_info.image}`}
+                name={`${user_info.first_name} ${user_info.last_name}`}
+                mobile={user_info.mobile}
+                userId={user_info.id}
+                userIdViewer={user_info?.id}
+                productCount={user_info.product_count}
+              />
+            )}
+          </div>
+          <div className={styles.row_right}>
+            <UserInfo
+              onEdit={() => handleTabClick("edit")}
+              onSuggestions={() => handleTabClick("suggestions")}
+              onAds={() => handleTabClick("ads")}
+              onSaved={() => handleTabClick("saved")}
+              onLogout={() => alert("خروج از حساب کاربری")}
+            />
+          </div>
         </div>
 
         <div className={styles.left}>
-          {isAuthenticated && user_info && (
-            <UserCard
-              imageUrl={`${Config.baseUrl}${user_info.image}`}
-              name={`${user_info.first_name} ${user_info.last_name}`}
-              mobile={user_info.mobile}
-              userId={user_info.id}
-              userIdViewer={user_info?.id}
-              productCount={user_info.product_count}
-            />
-          )}
+          <div className={styles.body_tab}>{renderTabContent()}</div>
         </div>
       </div>
     </div>

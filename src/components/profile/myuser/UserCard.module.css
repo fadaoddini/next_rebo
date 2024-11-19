@@ -6,9 +6,13 @@
   background-color: transparent;
   width: 100%;
 }
-
+.profile_section{
+  direction: rtl;
+  float: right;
+}
 .name_user{
-  text-align: center;
+  text-align: right;
+  padding-right: 30px;
   font-size: 1.2rem;
 }
 .content {
@@ -95,4 +99,33 @@
 .button_unfollow {
   background-color: var(--cream);
   color: #fff;
+}
+
+
+@media (max-width: 1260px) {
+  .card {
+    flex-direction: column; /* تغییر جهت چیدمان به ستون */
+    align-items: flex-start; /* تنظیم تراز آیتم‌ها */
+  }
+
+  .content {
+    flex-direction: column; /* محتوا نیز به ستون تغییر کند */
+    align-items: flex-start;
+  }
+
+  .stats {
+    justify-content: flex-start; /* ترازبندی آماری */
+    margin-left: 0; /* حذف فاصله اضافی */
+    margin-top: 10px; /* فاصله از بالا برای جدا شدن */
+  }
+
+  .buttons {
+    margin-left: 0; /* حذف فاصله چپ */
+    margin-top: 10px; /* فاصله از بالا برای جدا شدن */
+    align-self: flex-start; /* تراز دکمه‌ها به چپ */
+  }
+
+  .main_img {
+    margin-bottom: 10px; /* فاصله پایین بین عکس و متن */
+  }
 }
