@@ -8,6 +8,7 @@ import UserCard from "@/components/profile/myuser/UserCard";
 import { useAuth } from "@/context/AuthContext";
 import UserInfo from "@/components/profile/info/UserInfo";
 import EditProfileForm from "@/components/profile/user/EditProfileForm";
+import MyBids from "@/components/profile/mybid/MyBidList";
 
 export default function Profile() {
   const { user, isAuthenticated } = useAuth();
@@ -69,7 +70,9 @@ export default function Profile() {
           />
         );
       case "suggestions":
-        return <div>پیشنهادات من</div>;
+        return <div>
+          <MyBids />
+        </div>;
       case "ads":
         return <div>آگهی‌های من</div>;
       case "saved":
