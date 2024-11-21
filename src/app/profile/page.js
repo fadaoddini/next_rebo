@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import UserInfo from "@/components/profile/info/UserInfo";
 import EditProfileForm from "@/components/profile/user/EditProfileForm";
 import MyBids from "@/components/profile/mybid/MyBidList";
+import MyProduct from "@/components/profile/myproduct/MyProduct";
 
 export default function Profile() {
   const { user, isAuthenticated } = useAuth();
@@ -74,7 +75,9 @@ export default function Profile() {
           <MyBids />
         </div>;
       case "ads":
-        return <div>آگهی‌های من</div>;
+        return <div> 
+          <MyProduct/>
+        </div>;
       case "saved":
         return <div>ذخیره شده‌ها</div>;
       default:

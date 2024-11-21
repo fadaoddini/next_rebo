@@ -19,6 +19,11 @@ const ProductCard = ({
   // تعیین کلاس بر اساس مقدار color
   const cardClassName = color === "buy" ? styles.buyCard : styles.sellCard;
 
+  const Icon = ({ src, alt, color }) => {
+    const iconClass = color === "sell" ? styles.sellIcon : styles.buyIcon;
+    return <img className={`${styles.icon} ${iconClass}`} src={src} alt={alt} />;
+  };
+  
   return (
     <Link href={url}>
       <div
@@ -61,17 +66,23 @@ const ProductCard = ({
           </p>
           <div className={styles.details}>
             <p className={styles.detail}>
-              <span className={styles.icon}>💰</span>
+              <span className={styles.icon}>
+              <Icon src="/images/price_bid_icon.svg" alt="rebo" color={color} />
+              </span>
               <span className={styles.attr}>قیمت :</span>
               <span className={styles.bold}>{formatNumber(price)}</span> تومان
             </p>
             <p className={styles.detail}>
-              <span className={styles.icon}>📦</span>
+              <span className={styles.icon}>
+              <Icon src="/images/package_icon.svg" alt="rebo" color={color} />
+              </span>
               <span className={styles.attr}>بسته‌بندی :</span>
               {packaging}
             </p>
             <p className={styles.detail}>
-              <span className={styles.icon}>⚖️</span>
+              <span className={styles.icon}>
+              <Icon src="/images/weight.svg" alt="rebo" color={color} />
+              </span>
               <span className={styles.attr}>وزن :</span>
               <span className={styles.bold}>{formatNumber(weight)}</span>{" "}
               کیلوگرم
