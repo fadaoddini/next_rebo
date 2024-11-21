@@ -1,100 +1,63 @@
-import Image from "next/image";
 import Link from "next/link";
 import styles from "./MyBid.module.css";
 import formatNumber from "@/components/utils/FormatNumber/formatNumber";
-import CountdownTimer from "@/components/utils/timer/CountdownTimer";
+
+const Icon = ({ src, alt, color }) => {
+  const iconClass = color === "sell" ? styles.sellIcon : styles.buyIcon;
+  return <img className={`${styles.icon} ${iconClass}`} src={src} alt={alt} />;
+};
 
 const MyBid = ({
   color,
   url,
   title,
-  description,
   price,
   myprice,
-  top_price_bid,
   weight,
   packaging,
   imageSrc,
-  finished_time,
   rank,
 }) => {
-  // تعیین کلاس بر اساس مقدار color
-  const cardClassName = color === "buy" ? styles.buyCard : styles.sellCard;
+  const cardClassName = color === "sell" ? styles.sellCard : styles.buyCard;
+  const subTitle = color === "sell" ? "آگهی خرید" : "آگهی فروش";
 
   return (
     <Link href={url}>
-      <div
-        className={`${styles.card} ${cardClassName}`}
-        style={{
-          cursor: "pointer",
-        }}
-      >
-        {/* تصویر محصول */}
+      <div className={`${styles.card} ${cardClassName}`} style={{ cursor: "pointer" }}>
         <div className={styles.imageContainer}>
+          <img src={imageSrc} alt={title} width={100} height={100} className={styles.image} />
           <img
-            src={imageSrc}
-            alt={title}
-            width={100}
-            height={100}
-            className={styles.image}
+            className={styles.label_img}
+            src={`/images/label_${color}.svg`}
+            alt={color}
           />
-          {color === "buy" ? (
-            <img
-              className={styles.label_img}
-              src="/images/label_buy.svg"
-              alt="buy"
-            />
-          ) : (
-            <img
-              className={styles.label_img}
-              src="/images/label_sell.svg"
-              alt="sell"
-            />
-          )}
         </div>
-
-        {/* اطلاعات محصول */}
         <div className={styles.info}>
-          <h2 className={styles.title}>{title}</h2>
-          <p className={styles.offer}>
-            بالاترین پیشنهاد:{" "}
-            <span className={styles.green}>{formatNumber(top_price_bid)}</span>
-            تومان
-          </p>
-      
+          <h2 className={styles.title}>
+            <span>{subTitle}</span> {title}
+          </h2>
           <div className={styles.details}>
             <p className={styles.detail}>
-              <span className={styles.icon}>💰</span>
-              <span className={styles.attr}>قیمت :</span>
-              <span className={styles.bold}>{formatNumber(price)}</span> تومان
+              <Icon src="/images/bag.svg" alt="بسته‌بندی" color={color} />
+              <span className={styles.attr}>نوع بسته‌بندی:</span> {packaging}
             </p>
             <p className={styles.detail}>
-              <span className={styles.icon}>📦</span>
-              <span className={styles.attr}>بسته‌بندی :</span>
-              {packaging}
+              <Icon src="/images/weight.svg" alt="وزن" color={color} />
+              <span className={styles.attr}>وزن:</span>
+              <span className={styles.bold}>{formatNumber(weight)}</span> کیلوگرم
             </p>
-            <p className={styles.detail}>
-              <span className={styles.icon}>⚖️</span>
-              <span className={styles.attr}>وزن :</span>
-              <span className={styles.bold}>{formatNumber(weight)}</span>{" "}
-              کیلوگرم
+            <p className={styles.detailer}>
+              <span className={styles.bolder}>{formatNumber(price)}</span> تومان
+              <span className={styles.attr}>  - به ازای هر کیلوگرم</span>
             </p>
           </div>
         </div>
         <div className={styles.timerContainer}>
           <div className={styles.timerLeft}>
-           <span className={styles.span_rank}>
-           رتبه شما : 
-           
-           {formatNumber(rank)}
-           </span>
-
+            <span className={styles.span_rank}>رتبه شما: {formatNumber(rank)}</span>
             <div className={styles.timerIcon}>
               <span>
-              پیشنهاد شما : 
-               
-              {formatNumber(myprice)}
-              تومان
+                پیشنهاد شما: {formatNumber(myprice)} تومان
               </span>
             </div>
           </div>
