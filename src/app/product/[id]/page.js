@@ -14,6 +14,7 @@ import SingleApp from "@/components/bazar/Single/SingleApp";
 import SectionInfoSingle from "@/components/bazar/Single/SectionInfoSingle";
 import TopBider from "@/components/bazar/Bid/TopBider";
 import { useAuth } from "@/context/AuthContext";
+import FavoriteButton from "@/components/bazar/favorite/FavoriteButton";
 
 export default function Product({ params }) {
   const { user, isAuthenticated } = useAuth();
@@ -116,7 +117,15 @@ export default function Product({ params }) {
         <div className={styles.main}>
           <div className={styles.titr}>
             <span>{color === "buy" ? " آگهی خرید " : " آگهی فروش "} {singleData.name}</span>
+
+            <div>
+          {isAuthenticated && token && (
+          <FavoriteButton productId={parseInt(id)} token={token} />
+        )}
           </div>
+          </div>
+
+        
 
           <div className={styles.info_product}>
             <SectionInfoSingle

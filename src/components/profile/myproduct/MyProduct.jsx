@@ -12,11 +12,12 @@ const MyProduct = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null); // ذخیره توکن JWT
 
-  // دریافت توکن از localStorage
+
   useEffect(() => {
-    const storedToken = localStorage.getItem("accessToken"); // توکن را از localStorage می‌خوانیم
+    const storedToken = localStorage.getItem("accessToken"); 
     if (storedToken) {
-      setToken(storedToken); // اگر توکن موجود باشد، آن را در state ذخیره می‌کنیم
+      setToken(storedToken); 
+      console.log("dsdsdsdsdsd",storedToken);
     } else {
       setError("توکن JWT یافت نشد.");
     }
