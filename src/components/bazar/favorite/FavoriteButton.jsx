@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Config from "@/config/config";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 import styles from "./FavoriteButton.module.css"; // استایل ماژولار
 
 export default function FavoriteButton({ productId, token }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // برای کنترل نمایش دیالوگ تأیید
 
   // بررسی وضعیت علاقه‌مندی‌ها
   const checkFavoriteStatus = async () => {
@@ -56,7 +58,18 @@ export default function FavoriteButton({ productId, token }) {
       console.error("خطا در حذف از علاقه‌مندی‌ها:", error);
     } finally {
       setLoading(false);
+      setIsDialogOpen(false); // بستن دیالوگ پس از حذف
     }
+  };
+
+  // باز کردن دیالوگ برای حذف
+  const handleRemoveClick = () => {
+    setIsDialogOpen(true);
+  };
+
+  // بستن دیالوگ
+  const handleDialogCancel = () => {
+    setIsDialogOpen(false);
   };
 
   // بارگذاری وضعیت علاقه‌مندی هنگام mount
@@ -65,18 +78,31 @@ export default function FavoriteButton({ productId, token }) {
   }, [productId, token]);
 
   return (
-    <div
-      className={`${styles.favoriteIcon} ${isFavorite ? styles.active : ""}`}
-      onClick={isFavorite ? removeFromFavorites : addToFavorites}
-      role="button"
-      aria-label={isFavorite ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
-      disabled={loading}
-    >
-      <img
-        src={isFavorite ? "/images/favorit_add.svg" : "/images/favorit.svg"}
-        alt={isFavorite ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
-        className={loading ? styles.loading : ""}
+    <>
+      {/* دکمه علاقه‌مندی */}
+      <div
+        className={`${styles.favoriteIcon} ${isFavorite ? styles.active : ""}`}
+        onClick={isFavorite ? handleRemoveClick : addToFavorites}
+        role="button"
+        aria-label={isFavorite ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
+        disabled={loading}
+      >
+        <img
+          src={isFavorite ? "/images/favorit_add.svg" : "/images/favorit.svg"}
+          alt={isFavorite ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
+          className={loading ? styles.loading : ""}
+        />
+      </div>
+
+      {/* دیالوگ تأیید برای حذف */}
+      <ConfirmDialog
+        message="آیا مطمئن هستید که می‌خواهید این محصول را از علاقه‌مندی‌ها حذف کنید؟"
+        onConfirm={removeFromFavorites}
+        onCancel={handleDialogCancel}
+        confirmText="بله"
+        cancelText="خیر"
+        isOpen={isDialogOpen}
       />
-    </div>
+    </>
   );
 }
