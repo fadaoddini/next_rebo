@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Config from "@/config/config";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
+
 import styles from "./FavoriteButton.module.css"; // استایل ماژولار
+import ConfirmDialog from "@/components/utils/ConfirmDialog";
 
 export default function FavoriteButton({ productId, token }) {
   const [isFavorite, setIsFavorite] = useState(false);
