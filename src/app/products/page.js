@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
-import Config from "@/config/config"; // کانفیگ API شما
+import Config from "@/config/config"; 
 import ProductCard from "@/components/bazar/items/ProductCard";
 import styles from "@/styles/products.module.css";
 import { useAuth } from "@/context/AuthContext";

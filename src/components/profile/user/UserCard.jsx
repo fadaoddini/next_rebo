@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Config from "config/config";
-import styles from "./UserCard.module.css"; // مطمئن شوید که استایل‌های مناسب را اضافه کنید
+import styles from "./UserCard.module.css"; // اطمینان حاصل کنید که فایل CSS به درستی تنظیم شده است
 import useCheckToken from "@/hook/useCheckToken";
 
 const UserCard = ({
@@ -34,8 +34,8 @@ const UserCard = ({
         );
         if (response.data) {
           setIsFollowing(response.data.isFollowing);
-          setFollowersCount(response.data.followers);
-          setFollowingCount(response.data.following);
+          setFollowersCount(Number(response.data.followers || 0));
+          setFollowingCount(Number(response.data.following || 0));
         }
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -63,7 +63,7 @@ const UserCard = ({
       );
       if (response.status === 200 || response.status === 201) {
         setIsFollowing(true);
-        setFollowersCount((prevCount) => prevCount + 1);
+        setFollowersCount(Number(response.data.followers || 0));
       }
     } catch (error) {
       console.error("Error following user:", error);
@@ -86,7 +86,7 @@ const UserCard = ({
       );
       if (response.status === 200 || response.status === 204) {
         setIsFollowing(false);
-        setFollowersCount((prevCount) => prevCount - 1);
+        setFollowersCount(Number(response.data.followers || 0));
       }
     } catch (error) {
       console.error("Error unfollowing user:", error);
@@ -166,17 +166,23 @@ const UserCard = ({
       <div className={styles.buttons}>
         {userId !== userIdViewer && isLoggedIn && (
           isFollowing ? (
-            <button className={styles.button_unfollow} onClick={handleUnfollow}>
+            <button
+              className={`${styles.button} ${styles.button_unfollow}`}
+              onClick={handleUnfollow}
+            >
               دنبال نکردن
             </button>
           ) : (
-            <button className={styles.button_follow} onClick={handleFollow}>
+            <button
+              className={`${styles.button} ${styles.button_follow}`}
+              onClick={handleFollow}
+            >
               دنبال کردن
             </button>
           )
         )}
         <button
-          className={styles.button_profile}
+          className={`${styles.button} ${styles.button_profile}`}
           onClick={() => window.location.href = `/profile/${userId}`}
         >
           مشاهده پروفایل

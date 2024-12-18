@@ -1,72 +1,112 @@
 "use client";
-import { useState } from 'react';
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Config from "@/config/config"; 
+import ProductCard from "@/components/bazar/items/ProductCard";
 import styles from "@/styles/home.module.css";
-
-
-const images = [
-  '/images/001.jpg',
-  '/images/002.jpg',
-  '/images/003.jpg',
-  '/images/004.jpg',
-  '/images/005.jpg',
-  '/images/006.jpg',
-  '/images/007.jpg',
-  '/images/008.jpg',
-  '/images/009.jpg',
-  '/images/010.jpg',
-  '/images/011.jpg',
-];
-
+import Search from '@/components/bazar/search/Search';
 
 export default function Home() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [products, setProducts] = useState([]); // همه محصولات
+  const [filteredProducts, setFilteredProducts] = useState([]); // محصولات فیلتر شده
+  const [fetching, setFetching] = useState(false); // وضعیت در حال دریافت محصولات
+  const [error, setError] = useState(null); // ذخیره خطاها
+  const [query, setQuery] = useState(""); // جستجوی کاربر
 
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  // دریافت محصولات از سرور
+  const fetchProducts = async () => {
+    setFetching(true);
+    setError(null); // ریست خطاها
+  
+    try {
+      const response = await axios.get(
+        Config.getApiUrl("catalogue", "bazar/bazar_all")
+      );
+      setProducts(response.data);
+      setFilteredProducts(response.data); // محصولات اولیه را در فیلتر هم ذخیره کنید
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setError(error);
+    } finally {
+      setFetching(false);
+    }
   };
 
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-  };
+  // اعمال فیلتر به محصولات در زمان تغییر ورودی جستجو
+  useEffect(() => {
+    if (query.trim() === "") {
+      setFilteredProducts(products); // اگر جستجو خالی باشد، همه محصولات نمایش داده شوند
+    } else {
+      const lowerCaseQuery = query.toLowerCase();
+      const filtered = products.filter((product) =>
+        product.name_type.toLowerCase().includes(lowerCaseQuery)
+      );
+      setFilteredProducts(filtered); // بروزرسانی لیست فیلتر شده
+    }
+  }, [query, products]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
     <div className={styles.container}>
-      
+      <main className={styles.main}>
+        <div className={styles.left}>
+          {/* انتقال query و setter به کامپوننت جستجو */}
+          <Search query={query} setQuery={setQuery} />
 
-      <div className={styles.infoSection}>
-        <h1 className={styles.title}>ربو | بورس خرمای ایران </h1>
-        <p className={styles.description}>
+          <div>
+            <h1 className={styles.titleRed}>
+              <img
+                src="/images/right_barg_red.png"
+                alt="Left"
+                className={styles.sideImage}
+              />
+              فروشندگان انواع خرما
+              <img
+                src="/images/left_barg_red.png"
+                alt="Right"
+                className={styles.sideImage}
+              />
+            </h1>
+          </div>
 
-        ربو یک پلتفرم آنلاین تخصصی برای بازار عمده‌فروشی خرما است که با استفاده از هوش مصنوعی، واسطه‌ها را حذف کرده و تحلیل دقیقی از رفتار بازار ارائه می‌دهد. این نرم‌افزار به تولیدکنندگان و خریداران این امکان را می‌دهد تا به صورت مستقیم و کارآمدتر به معاملات بپردازند.
-
-به زودی، امکانات منحصر به فردی مانند فروشگاه مرکزی خرما، سامانه انبارداری پیشرفته، مدیریت حقوق و دستمزد کارگاه‌های بسته‌بندی خرما، و دوره‌های آموزشی تخصصی به این پلتفرم اضافه خواهد شد. هدف ما ایجاد یک بازار هوشمند و بدون واسطه برای صنعت خرما است.
-
-
-
-
-
-
-
-        
-        </p>
-        <div className={styles.buttons}>
-          <a href='https://app.rebo.ir/static/app/Rebo-v1.apk' className={styles.marketBtn}>دانلود از بازار</a>
-          <a href='https://app.rebo.ir/static/app/Rebo-v1.apk' className={styles.directBtn}>دانلود مستقیم</a>
+          <div className={styles.gridContainer}>
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  color="sell"
+                  title={product.name_type || "بدون عنوان"}
+                  description={product.description || "توضیحاتی موجود نیست"}
+                  price={product.price || 0}
+                  top_price_bid={product.best_price_bid || 0}
+                  upc={product.upc || ""}
+                  weight={product.weight || 0}
+                  packaging={
+                    product.attrs && product.attrs.length > 0
+                      ? product.attrs[0].value
+                      : "نوع بسته بندی نامشخص"
+                  }
+                  finished_time={product.expire_time || "نامشخص"}
+                  imageSrc={
+                    product.images && product.images.length > 0
+                      ? `${Config.baseUrl}${product.images[0].image}`
+                      : "/images/no_pic.jpg"
+                  }
+                  url={`/product/${product.id}?color=sell`}
+                />
+              ))
+            ) : (
+              <div>هیچ محصولی یافت نشد.</div>
+            )}
+          </div>
         </div>
-      </div>
-      <div className={styles.sliderSection}>
-        <div className={styles.phoneFrame}>
-          <img src={images[currentIndex]} alt={`slide ${currentIndex}`} className={styles.slide} />
-        </div>
-        <div className={styles.sliderButtons}>
-          <button onClick={handlePrev} className={styles.navButton}>
-          <img src="/images/before.png" alt="rebo" className={styles.after} />
-          </button>
-          <button onClick={handleNext} className={styles.navButton}> 
-            <img src="/images/after.png" alt="rebo" className={styles.after} />
-            </button>
-        </div>
-      </div>
+      </main>
+     
     </div>
   );
 }

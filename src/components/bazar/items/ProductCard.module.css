@@ -170,11 +170,11 @@
   margin-left: 5px;
 }
 
-.sellIcon {
+.buyIcon {
   filter: brightness(0) saturate(131%) invert(33%) sepia(17%) saturate(3505%) hue-rotate(40deg) brightness(106%) contrast(107%);
 }
 
-.buyIcon {
+.sellIcon {
   filter: brightness(0) saturate(100%) invert(27%) sepia(59%) saturate(574%) hue-rotate(312deg) brightness(93%) contrast(95%);
  
 }

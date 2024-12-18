@@ -1,120 +1,69 @@
-/* استایل کلی */
+/* استایل‌های کلی صفحه */
 .container {
   display: flex;
+  flex-direction: column;  /* این قسمت را به صورت ستونی تنظیم می‌کنیم */
   justify-content: center;
   align-items: center;
   gap: 20px;
   padding: 20px;
   text-align: center;
+  direction: rtl;
   flex-wrap: wrap;
+  max-width: 1300px;  /* حداکثر عرض را 1300px تنظیم می‌کنیم */
+  width: 100%; /* عرض کل صفحه 100% باشد تا در صفحات کوچکتر به خوبی نمایش داده شود */
+  margin: 0 auto; /* مرکز چین شدن صفحه */
 }
 
-/* بخش اسلایدر */
-.sliderSection {
+/* استایل‌های بخش main */
+.main {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.phoneFrame {
-  width: 300px;
-  height: 600px;
-  border: 16px solid #000;
-  border-radius: 36px;
-  overflow: hidden;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  background-color: #f0f0f0;
-  position: relative;
-}
-
-.slide {
+  justify-content: space-between;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  gap: 20px;
 }
 
-.sliderButtons {
+/* استایل‌های بخش چپ */
+.left {
+  width: 100%;  
+  padding: 10px;
+}
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* سه ستون مساوی */
+  gap: 50px; /* فاصله بین کارت‌ها */
+}
+
+
+.titleRed {
+  position: relative;
+  font-size: 0.9rem;
+  font-weight: bolder;
+  padding-top: 20px;
+  color: var(--dark-red);
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
+  align-items: center;
+  margin-bottom: 10px;
 }
-.after {
-  width: 36px;
-  margin-bottom: 60px;
-}
-.navButton {
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+/* استایل‌های بخش footer */
+.footer {
+  width: 100%;
+  background-color: lightcoral; /* برای نمایش بهتر */
+  padding: 10px;
+  margin-top: 20px;
 }
 
-.navButton:hover {
-  opacity: 0.8;
-}
-
-/* بخش اطلاعات */
-.infoSection {
-  flex: 1;
-  max-width: 400px;
-}
-
-.title {
-  font-size: 24px;
-  margin-bottom: 16px;
-  text-align: right;
-  direction: rtl;
-}
-
-.description {
-  font-size: 14px;
-  margin-bottom: 40px;
-  text-align: justify;
-  direction: rtl;
-}
-
-.buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.marketBtn,
-.directBtn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 60px;
-}
-
-.marketBtn {
-  background-color: #667a44;
-  color: white;
-}
-
-.directBtn {
-  background-color: #974e4e;
-  color: white;
-}
-
-.marketBtn:hover,
-.directBtn:hover {
-  opacity: 0.8;
-}
-
-/* استایل‌های موبایل */
+/* تنظیمات برای حالت موبایل */
 @media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    background-color: var(--background);
+  .main {
+    flex-direction: column; /* در موبایل بخش‌ها باید در هر سطر نمایش داده شوند */
   }
 
-  .phoneFrame {
-    width: 100%;
-    height: 500px;
-    background-color: var(--background);
+  .right {
+    width: 100%; /* در حالت موبایل عرض بخش راست 100% می‌شود */
+  }
+
+  .left {
+    width: 100%; /* در حالت موبایل عرض بخش چپ 100% می‌شود */
   }
 }
